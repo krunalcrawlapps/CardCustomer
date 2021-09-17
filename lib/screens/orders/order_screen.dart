@@ -1,33 +1,48 @@
 import 'package:card_app/constant/app_constant.dart';
 import 'package:card_app/database/database_helper.dart';
 import 'package:card_app/models/order_model.dart';
+import 'package:card_app/provider/auth_provider.dart';
+import 'package:card_app/screens/orders/order_details_screen.dart';
+import 'package:card_app/utils/date_utils.dart';
+import 'package:card_app/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
-class OrderScreen extends StatefulWidget {
-  const OrderScreen({Key? key}) : super(key: key);
+class OrdersScreen extends StatefulWidget {
+  const OrdersScreen({Key? key}) : super(key: key);
 
   @override
-  _OrderScreenState createState() => _OrderScreenState();
+  _OrdersScreenState createState() => _OrdersScreenState();
 }
 
-class _OrderScreenState extends State<OrderScreen> {
-  final orderRef = FirebaseFirestore.instance
+class _OrdersScreenState extends State<OrdersScreen> {
+  final custRef = FirebaseFirestore.instance
       .collection(FirebaseCollectionConstant.orders)
       .withConverter<OrderModel>(
         fromFirestore: (snapshots, _) => OrderModel.fromJson(snapshots.data()!),
-        toFirestore: (card, _) => card.toJson(),
+        toFirestore: (customer, _) => customer.toJson(),
       );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(StringConstant.orders)),
+      appBar: AppBar(
+        title: Text('Orders'),
+        actions: [
+          IconButton(
+              onPressed: () {
+                showLogoutDialog(context);
+              },
+              icon: Icon(Icons.logout, size: 20))
+        ],
+      ),
       body: StreamBuilder<QuerySnapshot<OrderModel>>(
-        stream: orderRef
+        stream: custRef
             .where('cust_id',
-                isEqualTo: DatabaseHelper.shared.getLoggedInUserModel()?.custId)
+                isEqualTo: Provider.of<AuthProvider>(context, listen: false)
+                    .currentLoggedInUser
+                    .custId)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -53,7 +68,16 @@ class _OrderScreenState extends State<OrderScreen> {
               return Padding(
                   padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
                   child: Container(
-                      width: double.infinity,
+                    width: double.infinity,
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    OrderDetailsScreen(
+                                        data.docs[index].data())));
+                      },
                       child: Card(
                           child: Padding(
                         padding: EdgeInsets.all(5),
@@ -62,30 +86,21 @@ class _OrderScreenState extends State<OrderScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(height: 5),
-                              Text('Card Number: ' +
-                                  data.docs[index]
-                                      .data()
-                                      .cardNumber
-                                      .toString()),
-                              SizedBox(height: 5),
-                              Text('Card Vendor: ' +
-                                  data.docs[index].data().cardVendor),
+                              Text('Order By: ' +
+                                  data.docs[index].data().custName),
                               SizedBox(height: 5),
                               Text('Order Date: ' +
-                                  getDateTime(data.docs[index]
+                                  DateTimeUtils.getDateTime(data.docs[index]
                                       .data()
                                       .transactionDateTime)),
                             ]),
-                      ))));
+                      )),
+                    ),
+                  ));
             },
           );
         },
       ),
     );
-  }
-
-  String getDateTime(int timestamp) {
-    var dt = DateTime.fromMillisecondsSinceEpoch(timestamp);
-    return DateFormat('dd/MM/yyyy, hh:mm a').format(dt);
   }
 }

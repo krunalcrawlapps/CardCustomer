@@ -19,6 +19,12 @@ class StringConstant {
   static const enter_valid_pwd_validation =
       'Password should be at least 6 char long';
 
+  static const enter_name_validation = 'Please enter name';
+  static const enter_address_validation = 'Please enter address';
+  static const enter_confirm_pwd_validation = 'Please enter confirm password';
+  static const invalid_confirm_pwd_validation =
+      'Confirm password should be same as password';
+
   //cards
   static const cards = 'Cards';
 

@@ -1,5 +1,6 @@
 import 'package:card_app/screens/customer_card/customer_balance_screen.dart';
 import 'package:card_app/screens/orders/order_screen.dart';
+import 'package:card_app/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -11,11 +12,10 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-  // static const TextStyle optionStyle =
-  //     TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
     CustomerBalanceScreen(),
-    OrderScreen()
+    OrdersScreen(),
+    ProfileScreen()
   ];
 
   void _onItemTapped(int index) {
@@ -40,6 +40,10 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.shopping_cart_sharp),
             label: 'Orders',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle),
+            label: 'My Profile',
+          )
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.amber[800],

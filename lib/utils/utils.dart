@@ -27,7 +27,7 @@ showAlert(BuildContext context, String msg, {Function? onClick}) {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Error"),
+          title: const Text("Alert"),
           content: Text(msg),
           actions: [
             ElevatedButton(

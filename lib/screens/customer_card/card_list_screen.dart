@@ -2,9 +2,11 @@ import 'package:card_app/constant/app_constant.dart';
 import 'package:card_app/database/database_helper.dart';
 import 'package:card_app/models/card_model.dart';
 import 'package:card_app/models/order_model.dart';
+import 'package:card_app/provider/auth_provider.dart';
 import 'package:card_app/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CardListScreen extends StatefulWidget {
   final Function refresh;
@@ -64,26 +66,16 @@ class _CardListScreenState extends State<CardListScreen> {
                   Text('Current Balance:', style: TextStyle(fontSize: 20)),
                   SizedBox(width: 5),
                   Text(
-                      DatabaseHelper.shared
-                              .getLoggedInUserModel()
-                              ?.custBalance
-                              .toString() ??
-                          '',
+                      Provider.of<AuthProvider>(context, listen: true)
+                          .currentLoggedInUser
+                          .custBalance
+                          .toString(),
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Colors.brown))
                 ]),
               ),
-              // Padding(
-              //   padding: EdgeInsets.all(16),
-              //   child: Container(
-              //     decoration: BoxDecoration(
-              //         border: Border.all(color: Colors.orange, width: 1.0),
-              //         borderRadius: BorderRadius.all(Radius.circular(8.0))),
-              //     child: ,
-              //   ),
-              // ),
               Expanded(
                 child: ListView.builder(
                   itemCount: data.size,
@@ -178,8 +170,9 @@ class _CardListScreenState extends State<CardListScreen> {
   }
 
   double getRemainingAmount() {
-    double currentBln =
-        DatabaseHelper.shared.getLoggedInUserModel()?.custBalance ?? 0;
+    double currentBln = Provider.of<AuthProvider>(context, listen: false)
+        .currentLoggedInUser
+        .custBalance;
     List<CardModel> arrSelected =
         arrCards.where((element) => element.isSelected).toList();
     double totalUsed = arrSelected.fold(0, (p, c) => p + c.amount);
@@ -191,27 +184,25 @@ class _CardListScreenState extends State<CardListScreen> {
     List<CardModel> arrSelected =
         arrCards.where((element) => element.isSelected).toList();
 
-    List<OrderModel> arrOrders = [];
-    arrSelected.forEach((element) {
-      OrderModel order = OrderModel(
+    OrderModel orderModel = OrderModel(
         getRandomId(),
-        element.cardId,
         DateTime.now().millisecondsSinceEpoch,
-        element.adminId,
-        DatabaseHelper.shared.getLoggedInUserModel()?.custId ?? '',
-        element.cardNumber,
-        element.cardVendor,
-        DatabaseHelper.shared.getLoggedInUserModel()?.custName ?? '',
-      );
-      arrOrders.add(order);
-    });
+        arrSelected.first.adminId,
+        Provider.of<AuthProvider>(context, listen: false)
+            .currentLoggedInUser
+            .custId,
+        Provider.of<AuthProvider>(context, listen: false)
+            .currentLoggedInUser
+            .custName);
 
-    arrOrders.forEach((element) {
-      DatabaseHelper.shared.addOrderData(element);
+    orderModel.arrCards = arrSelected.map((e) => e.cardId).toList();
+
+    DatabaseHelper.shared.addOrderData(orderModel);
+    arrSelected.forEach((element) {
       DatabaseHelper.shared.updateCardStatus(element.cardId);
     });
 
-    DatabaseHelper.shared.updateCustBalance(getRemainingAmount());
+    DatabaseHelper.shared.updateCustBalance(getRemainingAmount(), context);
 
     showAlert(context, 'Order placed successfully.', onClick: () {
       Navigator.of(context).pop();
