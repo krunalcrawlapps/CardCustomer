@@ -3,7 +3,6 @@ import 'package:card_app/database/database_helper.dart';
 import 'package:card_app/models/order_model.dart';
 import 'package:card_app/provider/auth_provider.dart';
 import 'package:card_app/screens/orders/order_details_screen.dart';
-import 'package:card_app/utils/date_utils.dart';
 import 'package:card_app/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -90,9 +89,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                   data.docs[index].data().custName),
                               SizedBox(height: 5),
                               Text('Order Date: ' +
-                                  DateTimeUtils.getDateTime(data.docs[index]
-                                      .data()
-                                      .transactionDateTime)),
+                                  data.docs[index].data().transactionDateTime),
                             ]),
                       )),
                     ),

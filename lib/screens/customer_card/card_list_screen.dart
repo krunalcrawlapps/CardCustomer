@@ -3,6 +3,7 @@ import 'package:card_app/database/database_helper.dart';
 import 'package:card_app/models/card_model.dart';
 import 'package:card_app/models/order_model.dart';
 import 'package:card_app/provider/auth_provider.dart';
+import 'package:card_app/utils/date_utils.dart';
 import 'package:card_app/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -186,7 +187,7 @@ class _CardListScreenState extends State<CardListScreen> {
 
     OrderModel orderModel = OrderModel(
         getRandomId(),
-        DateTime.now().millisecondsSinceEpoch,
+        DateTimeUtils.getDateTime(DateTime.now().millisecondsSinceEpoch),
         arrSelected.first.adminId,
         Provider.of<AuthProvider>(context, listen: false)
             .currentLoggedInUser
