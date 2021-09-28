@@ -16,6 +16,10 @@ class FirebaseCollectionConstant {
   static const customer = 'Customers';
   static const cards = 'Cards';
   static const orders = 'Orders';
+  static const vendors = 'Vendors';
+  static const transactions = 'Transactions';
+  static const category = 'Category';
+  static const subcategory = 'SubCategory';
 }
 
 class DatabaseHelper {
@@ -186,5 +190,22 @@ class DatabaseHelper {
     }
 
     saveUserModel(customer, context);
+  }
+
+  Future<List<CardModel>> getVendorWiseCards(String vendorId) async {
+    var collection = _fireStore
+        .collection(FirebaseCollectionConstant.cards)
+        .where('vendor_id', isEqualTo: vendorId)
+        .where('card_status', isEqualTo: CardStatus.available);
+    var querySnapshot = await collection.get();
+
+    List<CardModel> arrCards = [];
+    for (var doc in querySnapshot.docs) {
+      Map<String, dynamic> data = doc.data();
+      CardModel model = CardModel.fromJson(data);
+      arrCards.add(model);
+    }
+
+    return arrCards;
   }
 }

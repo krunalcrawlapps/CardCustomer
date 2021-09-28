@@ -38,6 +38,8 @@ class ErrorMessage {
 
 class ImageConstant {
   static const logo_img = 'assets/images/logo.png';
+  static const prepaidCard_img = 'assets/images/imgPrepaidCard.jpeg';
+  static const direcCharge_img = 'assets/images/imgDirectCharge.jpeg';
 }
 
 class SharedPrefConstant {
