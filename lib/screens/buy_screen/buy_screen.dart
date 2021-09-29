@@ -1,6 +1,9 @@
 import 'package:card_app/database/database_helper.dart';
 import 'package:card_app/models/card_model.dart';
+import 'package:card_app/models/order_model.dart';
 import 'package:card_app/provider/auth_provider.dart';
+import 'package:card_app/screens/home_screen.dart';
+import 'package:card_app/utils/date_utils.dart';
 import 'package:card_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -30,7 +33,13 @@ class _BuyScreenState extends State<BuyScreen> {
     arrCards = await DatabaseHelper.shared.getVendorWiseCards(
         Provider.of<AuthProvider>(context, listen: false)
             .selectedVendor
-            .vendorId);
+            .vendorId,
+        Provider.of<AuthProvider>(context, listen: false)
+            .selectedCategory
+            .catId,
+        Provider.of<AuthProvider>(context, listen: false)
+            .selectedSubCategory
+            .subCatId);
 
     setState(() {
       isCardsLoading = false;
@@ -78,7 +87,7 @@ class _BuyScreenState extends State<BuyScreen> {
                                                   listen: true)
                                               .currentLoggedInUser
                                               .custBalance
-                                              .toString() +
+                                              .toStringAsFixed(2) +
                                           ' USD',
                                       style: TextStyle(
                                           fontSize: 16,
@@ -194,7 +203,10 @@ class _BuyScreenState extends State<BuyScreen> {
                                   SizedBox(width: 5),
                                   IconButton(
                                       onPressed: () {
+                                        itemQty += 1;
+
                                         if (itemQty > arrCards.length) {
+                                          itemQty -= 1;
                                           showAlert(context,
                                               'Only ${arrCards.length} Cards Available!');
                                         } else {
@@ -203,16 +215,21 @@ class _BuyScreenState extends State<BuyScreen> {
                                                       listen: false)
                                                   .selectedSubCategory
                                                   .amount;
-                                          double tmpAmount = amount * itemQty;
-                                          if (getRemainingAmount() <
-                                              tmpAmount) {
+                                          double totalUsedAmount =
+                                              amount * itemQty;
+                                          // if (getRemainingAmount() <
+                                          //     tmpAmount) {
+                                          if (totalUsedAmount >
+                                              Provider.of<AuthProvider>(context,
+                                                      listen: false)
+                                                  .currentLoggedInUser
+                                                  .custBalance) {
                                             //no enough balance
+                                            itemQty -= 1;
                                             showAlert(context,
                                                 'You have not sufficient balance');
                                           } else {
-                                            setState(() {
-                                              itemQty += 1;
-                                            });
+                                            setState(() {});
                                           }
                                         }
                                       },
@@ -243,7 +260,29 @@ class _BuyScreenState extends State<BuyScreen> {
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(
                                   Colors.orange)),
-                          onPressed: () {},
+                          onPressed: () {
+                            if (itemQty > arrCards.length) {
+                              showAlert(context,
+                                  'Only ${arrCards.length} Cards Available!');
+                            } else {
+                              double amount = Provider.of<AuthProvider>(context,
+                                      listen: false)
+                                  .selectedSubCategory
+                                  .amount;
+                              double totalUsedAmount = amount * itemQty;
+                              if (totalUsedAmount >
+                                  Provider.of<AuthProvider>(context,
+                                          listen: false)
+                                      .currentLoggedInUser
+                                      .custBalance) {
+                                //no enough balance
+                                showAlert(
+                                    context, 'You have not sufficient balance');
+                              } else {
+                                _doBuyCards();
+                              }
+                            }
+                          },
                           child: const Text('Buy Cards',
                               style: TextStyle(fontSize: 18)),
                         ),
@@ -252,6 +291,36 @@ class _BuyScreenState extends State<BuyScreen> {
                   ),
       ),
     );
+  }
+
+  _doBuyCards() {
+    List<CardModel> arrBuyCards = arrCards.sublist(0, itemQty);
+
+    OrderModel orderModel = OrderModel(
+        getRandomId(),
+        DateTimeUtils.getDateTime(DateTime.now().millisecondsSinceEpoch),
+        arrBuyCards.first.adminId,
+        Provider.of<AuthProvider>(context, listen: false)
+            .currentLoggedInUser
+            .custId,
+        Provider.of<AuthProvider>(context, listen: false)
+            .currentLoggedInUser
+            .custName);
+
+    orderModel.arrCards = arrBuyCards.map((e) => e.cardId).toList();
+
+    DatabaseHelper.shared.addOrderData(orderModel);
+    arrBuyCards.forEach((element) {
+      DatabaseHelper.shared.updateCardStatus(element.cardId);
+    });
+
+    DatabaseHelper.shared.updateCustBalance(getRemainingAmount(), context);
+
+    showAlert(context, 'Order placed successfully.', onClick: () {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+          (Route<dynamic> route) => false);
+    });
   }
 
   double getTotalAmount() {

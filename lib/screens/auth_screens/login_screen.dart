@@ -1,13 +1,11 @@
 import 'package:card_app/constant/app_constant.dart';
 import 'package:card_app/database/database_helper.dart';
 import 'package:card_app/models/customer_model.dart';
-import 'package:card_app/provider/auth_provider.dart';
 import 'package:card_app/screens/home_screen.dart';
 import 'package:card_app/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);

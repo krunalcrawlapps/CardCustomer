@@ -68,7 +68,7 @@ class _CustomerBalanceScreenState extends State<CustomerBalanceScreen> {
                             Provider.of<AuthProvider>(context, listen: true)
                                     .currentLoggedInUser
                                     .custBalance
-                                    .toString() +
+                                    .toStringAsFixed(2) +
                                 ' USD',
                             style: TextStyle(
                                 fontSize: 16,

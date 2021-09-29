@@ -192,10 +192,13 @@ class DatabaseHelper {
     saveUserModel(customer, context);
   }
 
-  Future<List<CardModel>> getVendorWiseCards(String vendorId) async {
+  Future<List<CardModel>> getVendorWiseCards(
+      String vendorId, String catId, String subCatId) async {
     var collection = _fireStore
         .collection(FirebaseCollectionConstant.cards)
         .where('vendor_id', isEqualTo: vendorId)
+        .where('category_id', isEqualTo: catId)
+        .where('subCatId', isEqualTo: subCatId)
         .where('card_status', isEqualTo: CardStatus.available);
     var querySnapshot = await collection.get();
 
@@ -205,6 +208,8 @@ class DatabaseHelper {
       CardModel model = CardModel.fromJson(data);
       arrCards.add(model);
     }
+
+    arrCards.sort((a, b) => b.timestamp.compareTo(a.timestamp));
 
     return arrCards;
   }

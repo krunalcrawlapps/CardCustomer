@@ -111,11 +111,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 5),
-              Text(card.cardVendor),
+              Text(card.vendorName),
               SizedBox(height: 5),
               Text(card.cardNumber.toString()),
               SizedBox(height: 5),
-              Text(card.amount.toString()),
+              // Text(card.amount.toString()),
             ]),
       )),
     );
