@@ -76,7 +76,7 @@ class _SelectSubCategoryScreenState extends State<SelectSubCategoryScreen> {
                           MaterialPageRoute(
                               builder: (BuildContext context) => BuyScreen()));
                     },
-                    child: getImageCard(data.docs[index].data().imageUrl)),
+                    child: getBuyImageCard(data.docs[index].data().imageUrl)),
                 itemCount: data.size,
               ),
             ),

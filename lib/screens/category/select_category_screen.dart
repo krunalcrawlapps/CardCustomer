@@ -3,6 +3,7 @@ import 'package:card_app/database/database_helper.dart';
 import 'package:card_app/models/category_model.dart';
 import 'package:card_app/models/vendor_model.dart';
 import 'package:card_app/provider/auth_provider.dart';
+import 'package:card_app/screens/direct_charge/direct_charge_screen.dart';
 import 'package:card_app/screens/subcategory/select_subcategory_screen.dart';
 import 'package:card_app/widgets/common_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -69,14 +70,25 @@ class _SelectCategoryScreenState extends State<SelectCategoryScreen> {
                     onTap: () {
                       Provider.of<AuthProvider>(context, listen: false)
                           .setSelectedCategory(data.docs[index].data());
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  SelectSubCategoryScreen(
-                                      data.docs[index].data())));
+
+                      if (widget.vendorModel.isDirectCharge) {
+                        //direct charge
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    DirectChargeScreen()));
+                      } else {
+                        //prepaid charge
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    SelectSubCategoryScreen(
+                                        data.docs[index].data())));
+                      }
                     },
-                    child: getImageCard(data.docs[index].data().imageUrl)),
+                    child: getBuyImageCard(data.docs[index].data().imageUrl)),
                 itemCount: data.size,
               ),
             ),

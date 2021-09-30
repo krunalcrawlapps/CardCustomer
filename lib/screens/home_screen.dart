@@ -1,4 +1,5 @@
 import 'package:card_app/screens/customer/customer_balance_screen.dart';
+import 'package:card_app/screens/direct_charge/direct_charge_orders.dart';
 import 'package:card_app/screens/orders/order_screen.dart';
 import 'package:card_app/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   static const List<Widget> _widgetOptions = <Widget>[
     CustomerBalanceScreen(),
     OrdersScreen(),
+    DirectChargeOrders(),
     ProfileScreen()
   ];
 
@@ -31,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -39,6 +42,10 @@ class _HomeScreenState extends State<HomeScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart_sharp),
             label: 'Orders',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_shopping_cart),
+            label: 'Direct Charge',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle),

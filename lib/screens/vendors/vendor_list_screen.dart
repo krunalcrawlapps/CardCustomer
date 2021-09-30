@@ -9,7 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class VendorListScreen extends StatefulWidget {
-  const VendorListScreen({Key? key}) : super(key: key);
+  final bool isDirectCharge;
+  const VendorListScreen(this.isDirectCharge, {Key? key}) : super(key: key);
 
   @override
   _VendorListScreenState createState() => _VendorListScreenState();
@@ -34,7 +35,9 @@ class _VendorListScreenState extends State<VendorListScreen> {
       key: _scaffoldKey,
       appBar: AppBar(title: Text('Vendors')),
       body: StreamBuilder<QuerySnapshot<VendorModel>>(
-        stream: vendorRef.snapshots(),
+        stream: vendorRef
+            .where('isDirectCharge', isEqualTo: widget.isDirectCharge)
+            .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(

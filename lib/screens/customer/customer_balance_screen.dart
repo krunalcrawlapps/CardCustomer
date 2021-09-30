@@ -98,13 +98,19 @@ class _CustomerBalanceScreenState extends State<CustomerBalanceScreen> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (BuildContext context) => VendorListScreen()));
+                    builder: (BuildContext context) =>
+                        VendorListScreen(false)));
           }),
         ),
         SizedBox(width: 10),
         Expanded(
             child: getCardForImageName(
-                ImageConstant.direcCharge_img, 'Direct Charge', () {})),
+                ImageConstant.direcCharge_img, 'Direct Charge', () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => VendorListScreen(true)));
+        })),
       ]),
     );
   }

@@ -109,7 +109,11 @@ class DatabaseHelper {
         'admin_id': order.adminId,
         'cust_id': order.custId,
         'cust_name': order.custName,
-        'card_ids': order.arrCards
+        'card_ids': order.arrCards,
+        'isDirectCharge': order.isDirectCharge,
+        'accountId': order.accountId,
+        'secAccountId': order.secAccountId,
+        'fulfilmentStatus': order.fulfilmentStatus
       });
     } on FirebaseAuthException catch (error) {
       throw error.message ?? ErrorMessage.something_wrong;

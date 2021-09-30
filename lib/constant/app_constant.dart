@@ -25,6 +25,9 @@ class StringConstant {
   static const invalid_confirm_pwd_validation =
       'Confirm password should be same as password';
 
+  static const enter_amount_validation = 'Please enter amount';
+  static const enter_accountId_validation = 'Please enter account id';
+
   //cards
   static const cards = 'Cards';
 

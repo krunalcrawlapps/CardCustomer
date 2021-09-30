@@ -2,20 +2,19 @@ import 'package:card_app/constant/app_constant.dart';
 import 'package:card_app/database/database_helper.dart';
 import 'package:card_app/models/order_model.dart';
 import 'package:card_app/provider/auth_provider.dart';
-import 'package:card_app/screens/orders/order_details_screen.dart';
 import 'package:card_app/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class OrdersScreen extends StatefulWidget {
-  const OrdersScreen({Key? key}) : super(key: key);
+class DirectChargeOrders extends StatefulWidget {
+  const DirectChargeOrders({Key? key}) : super(key: key);
 
   @override
-  _OrdersScreenState createState() => _OrdersScreenState();
+  _DirectChargeOrdersState createState() => _DirectChargeOrdersState();
 }
 
-class _OrdersScreenState extends State<OrdersScreen> {
+class _DirectChargeOrdersState extends State<DirectChargeOrders> {
   final custRef = FirebaseFirestore.instance
       .collection(FirebaseCollectionConstant.orders)
       .withConverter<OrderModel>(
@@ -27,7 +26,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Orders'),
+        title: Text('Direct Charge Orders'),
         actions: [
           IconButton(
               onPressed: () {
@@ -42,7 +41,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 isEqualTo: Provider.of<AuthProvider>(context, listen: false)
                     .currentLoggedInUser
                     .custId)
-            .where('isDirectCharge', isEqualTo: false)
+            .where('isDirectCharge', isEqualTo: true)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -70,14 +69,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                   child: Container(
                     width: double.infinity,
                     child: InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    OrderDetailsScreen(
-                                        data.docs[index].data())));
-                      },
+                      onTap: () {},
                       child: Card(
                           child: Padding(
                         padding: EdgeInsets.all(5),
@@ -91,6 +83,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
                               SizedBox(height: 5),
                               Text('Order Date: ' +
                                   data.docs[index].data().transactionDateTime),
+                              SizedBox(height: 5),
+                              Text('Fulfillment Status: ' +
+                                  data.docs[index].data().fulfilmentStatus),
                             ]),
                       )),
                     ),

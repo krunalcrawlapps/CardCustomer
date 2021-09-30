@@ -50,3 +50,34 @@ Widget getImageCard(String imgUrl) {
     ])),
   );
 }
+
+Widget getBuyImageCard(String imgUrl) {
+  return Card(
+    semanticContainer: true,
+    clipBehavior: Clip.antiAliasWithSaveLayer,
+    elevation: 2,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+    child: Container(
+        child: Column(children: [
+      Expanded(
+          child: CachedNetworkImage(
+        imageUrl: imgUrl,
+        placeholder: (context, url) =>
+            Center(child: CircularProgressIndicator()),
+        errorWidget: (context, url, error) => Icon(Icons.error),
+      )),
+      Container(
+        color: Colors.tealAccent,
+        alignment: Alignment.center,
+        height: 30,
+        child: Text('Buy',
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.brown)),
+      )
+    ])),
+  );
+}

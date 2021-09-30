@@ -305,7 +305,11 @@ class _BuyScreenState extends State<BuyScreen> {
             .custId,
         Provider.of<AuthProvider>(context, listen: false)
             .currentLoggedInUser
-            .custName);
+            .custName,
+        false,
+        "",
+        "",
+        "");
 
     orderModel.arrCards = arrBuyCards.map((e) => e.cardId).toList();
 
