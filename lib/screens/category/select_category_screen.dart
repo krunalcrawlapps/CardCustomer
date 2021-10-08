@@ -35,65 +35,96 @@ class _SelectCategoryScreenState extends State<SelectCategoryScreen> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(title: Text('Select Category')),
-      body: StreamBuilder<QuerySnapshot<CategoryModel>>(
-        stream: categoryRef
-            .where('vendor_id', isEqualTo: widget.vendorModel.vendorId)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(
-              child: Text(snapshot.error.toString()),
-            );
-          }
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          final data = snapshot.requireData;
-
-          if (data.size == 0) {
-            return Center(
-              child: Text(StringConstant.no_data_found),
-            );
-          }
-
-          return SafeArea(
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    childAspectRatio: width / (height / 1.7),
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10),
-                itemBuilder: (_, index) => InkWell(
-                    onTap: () {
-                      Provider.of<AuthProvider>(context, listen: false)
-                          .setSelectedCategory(data.docs[index].data());
-
-                      if (widget.vendorModel.isDirectCharge) {
-                        //direct charge
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    DirectChargeScreen()));
-                      } else {
-                        //prepaid charge
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    SelectSubCategoryScreen(
-                                        data.docs[index].data())));
-                      }
-                    },
-                    child: getBuyImageCard(data.docs[index].data().imageUrl)),
-                itemCount: data.size,
-              ),
+      appBar: AppBar(
+        // title: Text('Select Category')
+        iconTheme: IconThemeData(color: Colors.orange),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 15),
+            child: Text(
+              "Select Category",
+              style: Theme.of(context).textTheme.headline4!.copyWith(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 28),
             ),
-          );
-        },
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 15, top: 5, bottom: 10),
+            child: Text(
+              "Select category of you want to buy",
+              style: Theme.of(context).textTheme.headline3!.copyWith(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          ),
+          Expanded(
+            child: StreamBuilder<QuerySnapshot<CategoryModel>>(
+              stream: categoryRef
+                  .where('vendor_id', isEqualTo: widget.vendorModel.vendorId)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Text(snapshot.error.toString()),
+                  );
+                }
+                if (!snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                final data = snapshot.requireData;
+
+                if (data.size == 0) {
+                  return Center(
+                    child: Text(StringConstant.no_data_found),
+                  );
+                }
+
+                return SafeArea(
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          childAspectRatio: width / (height / 1.7),
+                          crossAxisSpacing: 5,
+                          mainAxisSpacing: 5),
+                      itemBuilder: (_, index) => InkWell(
+                          onTap: () {
+                            Provider.of<AuthProvider>(context, listen: false)
+                                .setSelectedCategory(data.docs[index].data());
+
+                            if (widget.vendorModel.isDirectCharge) {
+                              //direct charge
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          DirectChargeScreen()));
+                            } else {
+                              //prepaid charge
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          SelectSubCategoryScreen(
+                                              data.docs[index].data())));
+                            }
+                          },
+                          child: getBuyImageCard(
+                              data.docs[index].data().imageUrl)),
+                      itemCount: data.size,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

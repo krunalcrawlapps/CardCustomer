@@ -25,44 +25,45 @@ class _DirectChargeScreenState extends State<DirectChargeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Buy Direct Charge')),
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.orange),
+      ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
-          child: Column(children: [
-            Container(
-              width: double.infinity,
-              child: Card(
-                child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Column(children: [
-                      Row(children: [
-                        Text('Name:', style: TextStyle(fontSize: 16)),
-                        SizedBox(width: 5),
-                        Text(
-                            Provider.of<AuthProvider>(context, listen: true)
-                                .currentLoggedInUser
-                                .custName,
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w500))
-                      ]),
-                      SizedBox(height: 10),
-                      Row(children: [
-                        Text('Current Balance:',
-                            style: TextStyle(fontSize: 16)),
-                        SizedBox(width: 5),
-                        Text(
-                            Provider.of<AuthProvider>(context, listen: true)
-                                    .currentLoggedInUser
-                                    .custBalance
-                                    .toStringAsFixed(2) +
-                                ' USD',
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.brown))
-                      ])
-                    ])),
+          padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            // User name...
+            Padding(
+              padding: const EdgeInsets.only(left: 5),
+              child: Text(
+                '${Provider.of<AuthProvider>(context, listen: true).currentLoggedInUser.custName}',
+                style: TextStyle(fontSize: 26, fontWeight: FontWeight.w700),
+              ),
+            ),
+            SizedBox(height: 20),
+            // Current balance...
+            Padding(
+              padding: const EdgeInsets.only(left: 5),
+              child: Row(
+                children: [
+                  Text('Current Balance:',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey)),
+                  SizedBox(width: 5),
+                  Text(
+                      Provider.of<AuthProvider>(context, listen: true)
+                              .currentLoggedInUser
+                              .custBalance
+                              .toStringAsFixed(2) +
+                          ' USD',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey))
+                ],
               ),
             ),
             SizedBox(height: 10),
@@ -71,101 +72,121 @@ class _DirectChargeScreenState extends State<DirectChargeScreen> {
               child: Container(
                 width: double.infinity,
                 child: Card(
-                  child: Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Column(children: [
-                        Row(children: [
-                          Text('Selected Vendor:',
-                              style: TextStyle(fontSize: 16)),
-                          SizedBox(width: 5),
-                          Text(
-                              Provider.of<AuthProvider>(context, listen: true)
-                                  .selectedVendor
-                                  .vendorName,
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.brown))
-                        ]),
-                        SizedBox(height: 10),
-                        Row(children: [
-                          Text('Selected Category:',
-                              style: TextStyle(fontSize: 16)),
-                          SizedBox(width: 5),
-                          Text(
-                              Provider.of<AuthProvider>(context, listen: true)
-                                  .selectedCategory
-                                  .catName,
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.brown))
-                        ]),
-                        SizedBox(height: 10),
-                        Row(children: [
-                          Text('Price:', style: TextStyle(fontSize: 16)),
-                          SizedBox(width: 5),
-                          Text(
-                              Provider.of<AuthProvider>(context, listen: true)
-                                      .selectedCategory
-                                      .amount
-                                      .toString() +
-                                  ' USD',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.brown))
-                        ]),
-                        SizedBox(height: 20),
-                        TextFormField(
-                          controller: accountController,
-                          keyboardType: TextInputType.name,
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Account Id',
-                              labelStyle: TextStyle(fontSize: 15)),
-                          validator: RequiredValidator(
-                              errorText:
-                                  StringConstant.enter_accountId_validation),
+                  elevation: 5,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Stack(
+                    alignment: Alignment.topRight,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(12),
+                        margin: EdgeInsets.only(right: 3, top: 3),
+                        decoration: BoxDecoration(
+                          color: Color(0xFF935216),
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(40),
+                              bottomRight: Radius.circular(40),
+                              topLeft: Radius.circular(40),
+                              topRight: Radius.circular(5)),
                         ),
-                        SizedBox(height: 20),
-                        TextFormField(
-                          controller: secAccountController,
-                          keyboardType: TextInputType.name,
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Secondary Account Id',
-                              labelStyle: TextStyle(fontSize: 15)),
+                        child: Text(
+                          "${Provider.of<AuthProvider>(context, listen: true).selectedCategory.amount}\n USD",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600),
                         ),
-                        SizedBox(height: 30),
-                        Container(
-                          width: 200,
-                          height: 40,
-                          child: ElevatedButton(
-                            style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.orange)),
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                if (getRemainingAmount() < 0) {
-                                  showAlert(context,
-                                      'You have not sufficient balance');
-                                } else {
-                                  //buy
-                                  _doBuyCards();
-                                }
-                              }
-                            },
-                            child: const Text('Buy',
-                                style: TextStyle(fontSize: 18)),
-                          ),
-                        ),
-                        SizedBox(height: 20)
-                      ])),
+                      ),
+                      Container(
+                          padding: EdgeInsets.all(15),
+                          margin: EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: Colors.grey.withOpacity(0.1)),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Vendor', style: TextStyle(fontSize: 16)),
+                                SizedBox(height: 5),
+                                Text(
+                                    Provider.of<AuthProvider>(context,
+                                            listen: true)
+                                        .selectedVendor
+                                        .vendorName,
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.brown)),
+                                SizedBox(height: 20),
+                                Text('Category',
+                                    style: TextStyle(fontSize: 16)),
+                                SizedBox(height: 5),
+                                Text(
+                                    Provider.of<AuthProvider>(context,
+                                            listen: true)
+                                        .selectedCategory
+                                        .catName,
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.brown)),
+                                SizedBox(height: 30),
+                                TextFormField(
+                                  controller: accountController,
+                                  keyboardType: TextInputType.name,
+                                  decoration: InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      labelText: 'Account Id',
+                                      labelStyle: TextStyle(fontSize: 15)),
+                                  validator: RequiredValidator(
+                                      errorText: StringConstant
+                                          .enter_accountId_validation),
+                                ),
+                                SizedBox(height: 20),
+                                TextFormField(
+                                  controller: secAccountController,
+                                  keyboardType: TextInputType.name,
+                                  decoration: InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      labelText: 'Secondary Account Id',
+                                      labelStyle: TextStyle(fontSize: 15)),
+                                ),
+                                SizedBox(height: 10),
+                              ])),
+                    ],
+                  ),
                 ),
               ),
             ),
+            Spacer(),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.orange),
+                  elevation: MaterialStateProperty.all(0),
+                  fixedSize: MaterialStateProperty.all(
+                    Size(MediaQuery.of(context).size.width - 20, 50),
+                  ),
+                ),
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    if (getRemainingAmount() < 0) {
+                      showAlert(context, 'You have not sufficient balance');
+                    } else {
+                      //buy
+                      _doBuyCards();
+                    }
+                  }
+                },
+                child: const Text('Buy',
+                    style: TextStyle(fontSize: 18, color: Colors.white)),
+              ),
+            ),
+            const SizedBox(height: 10),
           ]),
         ),
       ),
@@ -176,7 +197,9 @@ class _DirectChargeScreenState extends State<DirectChargeScreen> {
     OrderModel orderModel = OrderModel(
         getRandomId(),
         DateTimeUtils.getDateTime(DateTime.now().millisecondsSinceEpoch),
-        '',
+        Provider.of<AuthProvider>(context, listen: false)
+            .currentLoggedInUser
+            .adminId,
         Provider.of<AuthProvider>(context, listen: false)
             .currentLoggedInUser
             .custId,
@@ -186,7 +209,16 @@ class _DirectChargeScreenState extends State<DirectChargeScreen> {
         true,
         accountController.text,
         secAccountController.text,
-        "Open");
+        "Open",
+        Provider.of<AuthProvider>(context, listen: false)
+            .selectedCategory
+            .amount,
+        Provider.of<AuthProvider>(context, listen: false)
+            .selectedVendor
+            .vendorName,
+        Provider.of<AuthProvider>(context, listen: false)
+            .selectedCategory
+            .catName);
 
     orderModel.arrCards = [];
 

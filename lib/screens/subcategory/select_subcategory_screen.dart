@@ -36,52 +36,82 @@ class _SelectSubCategoryScreenState extends State<SelectSubCategoryScreen> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(title: Text('Select Sub Category')),
-      body: StreamBuilder<QuerySnapshot<SubCategoryModel>>(
-        stream: subCategoryRef
-            .where('category_id', isEqualTo: widget.categoryModel.catId)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(
-              child: Text(snapshot.error.toString()),
-            );
-          }
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          final data = snapshot.requireData;
-
-          if (data.size == 0) {
-            return Center(
-              child: Text(StringConstant.no_data_found),
-            );
-          }
-
-          return SafeArea(
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    childAspectRatio: width / (height / 1.7),
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10),
-                itemBuilder: (_, index) => InkWell(
-                    onTap: () {
-                      Provider.of<AuthProvider>(context, listen: false)
-                          .setSelectedSubCategory(data.docs[index].data());
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) => BuyScreen()));
-                    },
-                    child: getBuyImageCard(data.docs[index].data().imageUrl)),
-                itemCount: data.size,
-              ),
+      appBar: AppBar(),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 15),
+            child: Text(
+              "Select Sub Category",
+              style: Theme.of(context).textTheme.headline4!.copyWith(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 28),
             ),
-          );
-        },
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 15, top: 5, bottom: 10),
+            child: Text(
+              "Select sub category of you want to buy",
+              style: Theme.of(context).textTheme.headline3!.copyWith(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          ),
+          Expanded(
+            child: StreamBuilder<QuerySnapshot<SubCategoryModel>>(
+              stream: subCategoryRef
+                  .where('category_id', isEqualTo: widget.categoryModel.catId)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Text(snapshot.error.toString()),
+                  );
+                }
+                if (!snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                final data = snapshot.requireData;
+
+                if (data.size == 0) {
+                  return Center(
+                    child: Text(StringConstant.no_data_found),
+                  );
+                }
+
+                return SafeArea(
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          childAspectRatio: width / (height / 1.7),
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10),
+                      itemBuilder: (_, index) => InkWell(
+                          onTap: () {
+                            Provider.of<AuthProvider>(context, listen: false)
+                                .setSelectedSubCategory(
+                                    data.docs[index].data());
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        BuyScreen()));
+                          },
+                          child: getBuyImageCard(
+                              data.docs[index].data().imageUrl)),
+                      itemCount: data.size,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

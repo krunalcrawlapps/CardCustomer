@@ -113,7 +113,10 @@ class DatabaseHelper {
         'isDirectCharge': order.isDirectCharge,
         'accountId': order.accountId,
         'secAccountId': order.secAccountId,
-        'fulfilmentStatus': order.fulfilmentStatus
+        'fulfilmentStatus': order.fulfilmentStatus,
+        'amount': order.amount,
+        'vendor_name': order.vendorName,
+        'category_name': order.catName
       });
     } on FirebaseAuthException catch (error) {
       throw error.message ?? ErrorMessage.something_wrong;

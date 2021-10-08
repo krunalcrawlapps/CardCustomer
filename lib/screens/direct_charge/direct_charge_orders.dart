@@ -26,73 +26,167 @@ class _DirectChargeOrdersState extends State<DirectChargeOrders> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Direct Charge Orders'),
-        actions: [
-          IconButton(
-              onPressed: () {
-                showLogoutDialog(context);
-              },
-              icon: Icon(Icons.logout, size: 20))
-        ],
+        iconTheme: IconThemeData(color: Colors.orange),
+        // title: Text('Direct Charge Orders'),
+        // actions: [
+        //   IconButton(
+        //       onPressed: () {
+        //         showLogoutDialog(context);
+        //       },
+        //       icon: Icon(Icons.logout, size: 20))
+        // ],
       ),
-      body: StreamBuilder<QuerySnapshot<OrderModel>>(
-        stream: custRef
-            .where('cust_id',
-                isEqualTo: Provider.of<AuthProvider>(context, listen: false)
-                    .currentLoggedInUser
-                    .custId)
-            .where('isDirectCharge', isEqualTo: true)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(
-              child: Text(snapshot.error.toString()),
-            );
-          }
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 15),
+            child: Text(
+              "Direct Charge Orders",
+              style: Theme.of(context).textTheme.headline4!.copyWith(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 28),
+            ),
+          ),
+          Expanded(
+            child: StreamBuilder<QuerySnapshot<OrderModel>>(
+              stream: custRef
+                  .where('cust_id',
+                      isEqualTo:
+                          Provider.of<AuthProvider>(context, listen: false)
+                              .currentLoggedInUser
+                              .custId)
+                  .where('isDirectCharge', isEqualTo: true)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Text(snapshot.error.toString()),
+                  );
+                }
+                if (!snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-          final data = snapshot.requireData;
+                final data = snapshot.requireData;
 
-          if (data.size == 0) {
-            return Center(
-              child: Text(StringConstant.no_data_found),
-            );
-          }
+                if (data.size == 0) {
+                  return Center(
+                    child: Text(StringConstant.no_data_found),
+                  );
+                }
 
-          return ListView.builder(
-            itemCount: data.size,
-            itemBuilder: (context, index) {
-              return Padding(
-                  padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
-                  child: Container(
-                    width: double.infinity,
-                    child: InkWell(
-                      onTap: () {},
-                      child: Card(
-                          child: Padding(
-                        padding: EdgeInsets.all(5),
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 5),
-                              Text('Order By: ' +
-                                  data.docs[index].data().custName),
-                              SizedBox(height: 5),
-                              Text('Order Date: ' +
-                                  data.docs[index].data().transactionDateTime),
-                              SizedBox(height: 5),
-                              Text('Fulfillment Status: ' +
-                                  data.docs[index].data().fulfilmentStatus),
-                            ]),
-                      )),
-                    ),
-                  ));
-            },
-          );
-        },
+                return ListView.builder(
+                  itemCount: data.size,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                        padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
+                        child: Container(
+                          width: double.infinity,
+                          child: InkWell(
+                            onTap: () {},
+                            child: Card(
+                                elevation: 5,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Container(
+                                  margin: EdgeInsets.all(4),
+                                  padding: EdgeInsets.all(15),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      color: Colors.grey.withOpacity(0.1)),
+                                  child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Column(
+                                              children: [
+                                                Text('Order By',
+                                                    style: TextStyle(
+                                                        fontSize: 14)),
+                                                const SizedBox(height: 5),
+                                                Text(
+                                                    data.docs[index]
+                                                        .data()
+                                                        .custName,
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w600))
+                                              ],
+                                            ),
+                                            Text(
+                                                data.docs[index]
+                                                    .data()
+                                                    .transactionDateTime,
+                                                style: TextStyle(fontSize: 14))
+                                          ],
+                                        ),
+                                        const SizedBox(height: 20),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text('Amount',
+                                                    style: TextStyle(
+                                                        fontSize: 14)),
+                                                SizedBox(height: 5),
+                                                Text(
+                                                    data.docs[index]
+                                                            .data()
+                                                            .amount
+                                                            .toString() +
+                                                        " USD",
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w600)),
+                                              ],
+                                            ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text('Fulfillment Status',
+                                                    style: TextStyle(
+                                                        fontSize: 14)),
+                                                SizedBox(height: 5),
+                                                Text(
+                                                    data.docs[index]
+                                                        .data()
+                                                        .fulfilmentStatus,
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w600)),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ]),
+                                )),
+                          ),
+                        ));
+                  },
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

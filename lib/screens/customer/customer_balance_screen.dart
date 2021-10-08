@@ -26,58 +26,94 @@ class _CustomerBalanceScreenState extends State<CustomerBalanceScreen> {
         toFirestore: (vendor, _) => vendor.toJson(),
       );
 
+  bool isSelectedPrepaidCard = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Home'),
-        actions: [
-          IconButton(
-              onPressed: () {
-                showLogoutDialog(context);
-              },
-              icon: Icon(Icons.logout, size: 20))
-        ],
-      ),
+      // appBar: AppBar(
+      //   title: Text('Home'),
+      //   actions: [
+      //     IconButton(
+      //         onPressed: () {
+      //           showLogoutDialog(context);
+      //         },
+      //         icon: Icon(Icons.logout, size: 20))
+      //   ],
+      // ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
-          child: Column(children: [
-            Container(
-              width: double.infinity,
-              child: Card(
-                child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Column(children: [
-                      Row(children: [
-                        Text('Name:', style: TextStyle(fontSize: 16)),
-                        SizedBox(width: 5),
-                        Text(
-                            Provider.of<AuthProvider>(context, listen: true)
-                                .currentLoggedInUser
-                                .custName,
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w500))
-                      ]),
-                      SizedBox(height: 10),
-                      Row(children: [
-                        Text('Current Balance:',
-                            style: TextStyle(fontSize: 16)),
-                        SizedBox(width: 5),
-                        Text(
-                            Provider.of<AuthProvider>(context, listen: true)
-                                    .currentLoggedInUser
-                                    .custBalance
-                                    .toStringAsFixed(2) +
-                                ' USD',
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.brown))
-                      ])
-                    ])),
+          padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            // User name...
+            Padding(
+              padding: const EdgeInsets.only(left: 5),
+              child: Text(
+                'Welcome to, \n${Provider.of<AuthProvider>(context, listen: true).currentLoggedInUser.custName}',
+                style: TextStyle(fontSize: 26, fontWeight: FontWeight.w700),
               ),
             ),
+            SizedBox(height: 10),
+            // Current balance...
+            Padding(
+              padding: const EdgeInsets.only(left: 5),
+              child: Row(
+                children: [
+                  Text('Current Balance:',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey)),
+                  SizedBox(width: 5),
+                  Text(
+                      Provider.of<AuthProvider>(context, listen: true)
+                              .currentLoggedInUser
+                              .custBalance
+                              .toStringAsFixed(2) +
+                          ' USD',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey))
+                ],
+              ),
+            ),
+            // Container(
+            //   width: double.infinity,
+            //   child: Card(
+            //     child: Padding(
+            //         padding: EdgeInsets.all(10),
+            //         child: Column(children: [
+            //           Row(children: [
+            //             Text('Name:', style: TextStyle(fontSize: 16)),
+            //             SizedBox(width: 5),
+            //             Text(
+            //                 Provider.of<AuthProvider>(context, listen: true)
+            //                     .currentLoggedInUser
+            //                     .custName,
+            //                 style: TextStyle(
+            //                     fontSize: 16, fontWeight: FontWeight.w500))
+            //           ]),
+            //           SizedBox(height: 10),
+            //           Row(children: [
+            //             Text('Current Balance:',
+            //                 style: TextStyle(fontSize: 16)),
+            //             SizedBox(width: 5),
+            //             Text(
+            //                 Provider.of<AuthProvider>(context, listen: true)
+            //                         .currentLoggedInUser
+            //                         .custBalance
+            //                         .toStringAsFixed(2) +
+            //                     ' USD',
+            //                 style: TextStyle(
+            //                     fontSize: 16,
+            //                     fontWeight: FontWeight.bold,
+            //                     color: Colors.brown))
+            //           ])
+            //         ])),
+            //   ),
+            // ),
             SizedBox(height: 20),
             getFixCard(),
             SizedBox(height: 20),
@@ -89,37 +125,42 @@ class _CustomerBalanceScreenState extends State<CustomerBalanceScreen> {
   }
 
   Widget getFixCard() {
-    return Container(
-      height: MediaQuery.of(context).size.width / 2 - 30,
-      child: Row(children: [
-        Expanded(
-          child: getCardForImageName(
-              ImageConstant.prepaidCard_img, 'Prepaid Cards', () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        VendorListScreen(false)));
-          }),
-        ),
-        SizedBox(width: 10),
-        Expanded(
-            child: getCardForImageName(
-                ImageConstant.direcCharge_img, 'Direct Charge', () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => VendorListScreen(true)));
-        })),
-      ]),
-    );
+    return Row(children: [
+      Expanded(
+        child: getCardForImageName(
+            ImageConstant.prepaidCard_img, 'Prepaid Cards', () {
+          setState(() {
+            isSelectedPrepaidCard = true;
+          });
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (BuildContext context) => VendorListScreen(false)));
+        }, isSelectedPrepaidCard),
+      ),
+      SizedBox(width: 5),
+      Expanded(
+        child: getCardForImageName(
+            ImageConstant.direcCharge_img, 'Direct Charge', () {
+          setState(() {
+            isSelectedPrepaidCard = false;
+          });
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (BuildContext context) => VendorListScreen(true)));
+        }, !isSelectedPrepaidCard),
+      ),
+    ]);
   }
 
   Widget getVendors() {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return StreamBuilder<QuerySnapshot<VendorModel>>(
-      stream: vendorRef.snapshots(),
+      stream: vendorRef
+          .where('isDirectCharge', isNotEqualTo: isSelectedPrepaidCard)
+          .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Center(
@@ -138,25 +179,40 @@ class _CustomerBalanceScreenState extends State<CustomerBalanceScreen> {
         }
 
         return Expanded(
-            child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              childAspectRatio: width / (height / 1.7),
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10),
-          itemBuilder: (_, index) => InkWell(
-              onTap: () {
-                Provider.of<AuthProvider>(context, listen: false)
-                    .setSelectedVendor(data.docs[index].data());
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            SelectCategoryScreen(data.docs[index].data())));
-              },
-              child: getImageCard(data.docs[index].data().imageUrl)),
-          itemCount: data.size,
-        ));
+          child: Card(
+            elevation: 5,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Container(
+              margin: EdgeInsets.all(3),
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.grey.withOpacity(0.1)),
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    childAspectRatio: width / (height / 1.7),
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10),
+                itemBuilder: (_, index) => InkWell(
+                    onTap: () {
+                      Provider.of<AuthProvider>(context, listen: false)
+                          .setSelectedVendor(data.docs[index].data());
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  SelectCategoryScreen(
+                                      data.docs[index].data())));
+                    },
+                    child: getImageCard(data.docs[index].data().imageUrl)),
+                itemCount: data.size,
+              ),
+            ),
+          ),
+        );
       },
     );
   }

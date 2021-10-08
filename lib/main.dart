@@ -27,6 +27,8 @@ class MyApp extends StatelessWidget {
         title: StringConstant.app_name,
         theme: ThemeData(
           primarySwatch: Colors.orange,
+          appBarTheme: AppBarTheme(color: Colors.white, elevation: 0),
+          scaffoldBackgroundColor: Colors.white,
         ),
         home: SplashScreen(),
       ),

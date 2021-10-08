@@ -50,216 +50,282 @@ class _BuyScreenState extends State<BuyScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Buy Cards')),
+      appBar: AppBar(
+        // title: Text('Buy Cards'),
+        iconTheme: IconThemeData(color: Colors.orange),
+      ),
       body: SafeArea(
         child: isCardsLoading
             ? Center(child: CircularProgressIndicator())
             : arrCards.length == 0
                 ? Center(child: Text('No Cards in this Category!'))
                 : Padding(
-                    padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
+                    padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
                     child: Column(children: [
-                      Container(
-                        width: double.infinity,
-                        child: Card(
-                          child: Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Column(children: [
-                                Row(children: [
-                                  Text('Name:', style: TextStyle(fontSize: 16)),
-                                  SizedBox(width: 5),
-                                  Text(
-                                      Provider.of<AuthProvider>(context,
-                                              listen: true)
-                                          .currentLoggedInUser
-                                          .custName,
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500))
-                                ]),
-                                SizedBox(height: 10),
-                                Row(children: [
-                                  Text('Current Balance:',
-                                      style: TextStyle(fontSize: 16)),
-                                  SizedBox(width: 5),
-                                  Text(
-                                      Provider.of<AuthProvider>(context,
-                                                  listen: true)
-                                              .currentLoggedInUser
-                                              .custBalance
-                                              .toStringAsFixed(2) +
-                                          ' USD',
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.brown))
-                                ])
-                              ])),
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Container(
-                        width: double.infinity,
-                        child: Card(
-                          child: Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Column(children: [
-                                Row(children: [
-                                  Text('Selected Vendor:',
-                                      style: TextStyle(fontSize: 16)),
-                                  SizedBox(width: 5),
-                                  Text(
-                                      Provider.of<AuthProvider>(context,
-                                              listen: true)
-                                          .selectedVendor
-                                          .vendorName,
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.brown))
-                                ]),
-                                SizedBox(height: 10),
-                                Row(children: [
-                                  Text('Selected Category:',
-                                      style: TextStyle(fontSize: 16)),
-                                  SizedBox(width: 5),
-                                  Text(
-                                      Provider.of<AuthProvider>(context,
-                                              listen: true)
-                                          .selectedCategory
-                                          .catName,
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.brown))
-                                ]),
-                                SizedBox(height: 10),
-                                Row(children: [
-                                  Text('Selected Sub Category:',
-                                      style: TextStyle(fontSize: 16)),
-                                  SizedBox(width: 5),
-                                  Text(
-                                      Provider.of<AuthProvider>(context,
-                                              listen: true)
-                                          .selectedSubCategory
-                                          .subCatName,
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.brown))
-                                ]),
-                                SizedBox(height: 10),
-                                Row(children: [
-                                  Text('Price:',
-                                      style: TextStyle(fontSize: 16)),
-                                  SizedBox(width: 5),
-                                  Text(
-                                      Provider.of<AuthProvider>(context,
-                                                  listen: true)
-                                              .selectedSubCategory
-                                              .amount
-                                              .toString() +
-                                          ' USD',
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.brown))
-                                ])
-                              ])),
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Text('Add Qty',
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.brown)),
-                      SizedBox(height: 10),
                       Padding(
-                        padding: EdgeInsets.all(5),
-                        child: Container(
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                // color: Colors.cyan,
-                                border: Border.all(color: Colors.orange)),
-                            child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  IconButton(
-                                      onPressed: () {
-                                        if (itemQty != 1) {
-                                          setState(() {
-                                            itemQty -= 1;
-                                          });
-                                        }
-                                      },
-                                      icon: Icon(Icons.remove,
-                                          size: 15, color: Colors.orange)),
-                                  SizedBox(width: 5),
-                                  Text('$itemQty',
-                                      style: TextStyle(color: Colors.orange)),
-                                  SizedBox(width: 5),
-                                  IconButton(
-                                      onPressed: () {
-                                        itemQty += 1;
-
-                                        if (itemQty > arrCards.length) {
-                                          itemQty -= 1;
-                                          showAlert(context,
-                                              'Only ${arrCards.length} Cards Available!');
-                                        } else {
-                                          double amount =
-                                              Provider.of<AuthProvider>(context,
-                                                      listen: false)
-                                                  .selectedSubCategory
-                                                  .amount;
-                                          double totalUsedAmount =
-                                              amount * itemQty;
-                                          // if (getRemainingAmount() <
-                                          //     tmpAmount) {
-                                          if (totalUsedAmount >
-                                              Provider.of<AuthProvider>(context,
-                                                      listen: false)
-                                                  .currentLoggedInUser
-                                                  .custBalance) {
-                                            //no enough balance
-                                            itemQty -= 1;
-                                            showAlert(context,
-                                                'You have not sufficient balance');
-                                          } else {
-                                            setState(() {});
-                                          }
-                                        }
-                                      },
-                                      icon: Icon(Icons.add,
-                                          size: 15, color: Colors.orange))
-                                ])),
-                      ),
-                      SizedBox(height: 20),
-                      Center(
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text('Total Amount:',
-                                  style: TextStyle(fontSize: 18)),
-                              SizedBox(width: 5),
-                              Text(getTotalAmount().toString() + ' USD',
+                          padding: EdgeInsets.all(10),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // User name...
+                                Text(
+                                  '${Provider.of<AuthProvider>(context, listen: true).currentLoggedInUser.custName}',
                                   style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.brown))
-                            ]),
+                                      fontSize: 26,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                                SizedBox(height: 20),
+                                // Current balance...
+                                Row(
+                                  children: [
+                                    Text('Current Balance:',
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.grey)),
+                                    SizedBox(width: 5),
+                                    Text(
+                                        Provider.of<AuthProvider>(context,
+                                                    listen: true)
+                                                .currentLoggedInUser
+                                                .custBalance
+                                                .toStringAsFixed(2) +
+                                            ' USD',
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.grey))
+                                  ],
+                                ),
+                              ])),
+                      Card(
+                        elevation: 5,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Stack(
+                          alignment: Alignment.topRight,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(12),
+                              margin: EdgeInsets.only(right: 3, top: 3),
+                              decoration: BoxDecoration(
+                                color: Color(0xFF935216),
+                                borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(40),
+                                    bottomRight: Radius.circular(40),
+                                    topLeft: Radius.circular(40),
+                                    topRight: Radius.circular(5)),
+                              ),
+                              child: Text(
+                                "${Provider.of<AuthProvider>(context, listen: false).selectedSubCategory.amount}\n USD",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.all(4),
+                              padding: EdgeInsets.all(15),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Colors.grey.withOpacity(0.1)),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('Vendor',
+                                        style: TextStyle(fontSize: 16)),
+                                    SizedBox(height: 5),
+                                    Text(
+                                        Provider.of<AuthProvider>(context,
+                                                listen: true)
+                                            .selectedVendor
+                                            .vendorName,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        )),
+                                    SizedBox(height: 20),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text('Category',
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                  )),
+                                              SizedBox(height: 5),
+                                              Text(
+                                                  Provider.of<AuthProvider>(
+                                                          context,
+                                                          listen: true)
+                                                      .selectedCategory
+                                                      .catName,
+                                                  maxLines: 3,
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                  )),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(width: 15),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 20),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text('Sub Category',
+                                                    style: TextStyle(
+                                                        fontSize: 16)),
+                                                SizedBox(height: 5),
+                                                Text(
+                                                  Provider.of<AuthProvider>(
+                                                          context,
+                                                          listen: true)
+                                                      .selectedSubCategory
+                                                      .subCatName,
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                  maxLines: 3,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Container(
+                                      width: double.infinity,
+                                      margin: EdgeInsets.only(top: 25),
+                                      padding: EdgeInsets.only(
+                                          left: 10, top: 5, bottom: 5),
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            'Select Quantity',
+                                          ),
+                                          Spacer(),
+                                          IconButton(
+                                              onPressed: () {
+                                                if (itemQty != 1) {
+                                                  setState(() {
+                                                    itemQty -= 1;
+                                                  });
+                                                }
+                                              },
+                                              icon: Container(
+                                                padding: EdgeInsets.all(3),
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                    color: Colors.grey
+                                                        .withOpacity(0.15)),
+                                                child: Icon(
+                                                  Icons.remove,
+                                                  size: 20,
+                                                ),
+                                              )),
+                                          SizedBox(width: 10),
+                                          Text('$itemQty',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w700)),
+                                          SizedBox(width: 10),
+                                          IconButton(
+                                              onPressed: () {
+                                                itemQty += 1;
+
+                                                if (itemQty > arrCards.length) {
+                                                  itemQty -= 1;
+                                                  showAlert(context,
+                                                      'Only ${arrCards.length} Cards Available!');
+                                                } else {
+                                                  double amount =
+                                                      Provider.of<AuthProvider>(
+                                                              context,
+                                                              listen: false)
+                                                          .selectedSubCategory
+                                                          .amount;
+                                                  double totalUsedAmount =
+                                                      amount * itemQty;
+                                                  // if (getRemainingAmount() <
+                                                  //     tmpAmount) {
+                                                  if (totalUsedAmount >
+                                                      Provider.of<AuthProvider>(
+                                                              context,
+                                                              listen: false)
+                                                          .currentLoggedInUser
+                                                          .custBalance) {
+                                                    //no enough balance
+                                                    itemQty -= 1;
+                                                    showAlert(context,
+                                                        'You have not sufficient balance');
+                                                  } else {
+                                                    setState(() {});
+                                                  }
+                                                }
+                                              },
+                                              icon: Container(
+                                                padding: EdgeInsets.all(3),
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                    color: Colors.grey
+                                                        .withOpacity(0.15)),
+                                                child: Icon(
+                                                  Icons.add,
+                                                  size: 20,
+                                                ),
+                                              ))
+                                        ],
+                                      ),
+                                    )
+                                  ]),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 5),
+                          child: Text(
+                            'Total Amount\n${getTotalAmount().toString() + ' USD'}',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w700),
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
                       ),
                       SizedBox(height: 30),
-                      Container(
-                        width: 200,
-                        height: 40,
+                      Spacer(),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
                         child: ElevatedButton(
                           style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.orange)),
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(Colors.orange),
+                            fixedSize: MaterialStateProperty.all(Size(
+                                MediaQuery.of(context).size.width - 30, 50)),
+                            elevation: MaterialStateProperty.all(0),
+                          ),
                           onPressed: () {
                             if (itemQty > arrCards.length) {
                               showAlert(context,
@@ -283,10 +349,12 @@ class _BuyScreenState extends State<BuyScreen> {
                               }
                             }
                           },
-                          child: const Text('Buy Cards',
-                              style: TextStyle(fontSize: 18)),
+                          child: const Text('Buy',
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.white)),
                         ),
-                      )
+                      ),
+                      const SizedBox(height: 10),
                     ]),
                   ),
       ),
@@ -294,38 +362,45 @@ class _BuyScreenState extends State<BuyScreen> {
   }
 
   _doBuyCards() {
-    List<CardModel> arrBuyCards = arrCards.sublist(0, itemQty);
+  List<CardModel> arrBuyCards = arrCards.sublist(0, itemQty);
 
-    OrderModel orderModel = OrderModel(
-        getRandomId(),
-        DateTimeUtils.getDateTime(DateTime.now().millisecondsSinceEpoch),
-        arrBuyCards.first.adminId,
-        Provider.of<AuthProvider>(context, listen: false)
-            .currentLoggedInUser
-            .custId,
-        Provider.of<AuthProvider>(context, listen: false)
-            .currentLoggedInUser
-            .custName,
-        false,
-        "",
-        "",
-        "");
+  double orderAmount = Provider.of<AuthProvider>(context, listen: false)
+          .selectedSubCategory
+          .amount *
+      itemQty;
+  OrderModel orderModel = OrderModel(
+      getRandomId(),
+      DateTimeUtils.getDateTime(DateTime.now().millisecondsSinceEpoch),
+      arrBuyCards.first.adminId,
+      Provider.of<AuthProvider>(context, listen: false)
+          .currentLoggedInUser
+          .custId,
+      Provider.of<AuthProvider>(context, listen: false)
+          .currentLoggedInUser
+          .custName,
+      false,
+      "",
+      "",
+      "",
+      orderAmount,
+      "",
+      "");
 
-    orderModel.arrCards = arrBuyCards.map((e) => e.cardId).toList();
+  orderModel.arrCards = arrBuyCards.map((e) => e.cardId).toList();
 
-    DatabaseHelper.shared.addOrderData(orderModel);
-    arrBuyCards.forEach((element) {
-      DatabaseHelper.shared.updateCardStatus(element.cardId);
-    });
+  DatabaseHelper.shared.addOrderData(orderModel);
+  arrBuyCards.forEach((element) {
+    DatabaseHelper.shared.updateCardStatus(element.cardId);
+  });
 
-    DatabaseHelper.shared.updateCustBalance(getRemainingAmount(), context);
+  DatabaseHelper.shared.updateCustBalance(getRemainingAmount(), context);
 
-    showAlert(context, 'Order placed successfully.', onClick: () {
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => HomeScreen()),
-          (Route<dynamic> route) => false);
-    });
-  }
+  showAlert(context, 'Order placed successfully.', onClick: () {
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+        (Route<dynamic> route) => false);
+  });
+}
 
   double getTotalAmount() {
     double amount = Provider.of<AuthProvider>(context, listen: true)

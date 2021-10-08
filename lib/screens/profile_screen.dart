@@ -47,13 +47,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('My Profile'), actions: [
-          IconButton(
-              onPressed: () {
-                showLogoutDialog(context);
-              },
-              icon: Icon(Icons.logout, size: 20))
-        ]),
+        appBar: AppBar(
+          title: Text('My Profile'),
+          // actions: [
+          //   IconButton(
+          //       onPressed: () {
+          //         showLogoutDialog(context);
+          //       },
+          //       icon: Icon(Icons.logout, size: 20))
+          // ],
+        ),
         body: Form(
             key: _formKey,
             child: SingleChildScrollView(
