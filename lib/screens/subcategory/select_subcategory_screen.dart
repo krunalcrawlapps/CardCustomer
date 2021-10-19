@@ -1,9 +1,11 @@
 import 'package:card_app/constant/app_constant.dart';
 import 'package:card_app/database/database_helper.dart';
 import 'package:card_app/models/category_model.dart';
+import 'package:card_app/models/price_model.dart';
 import 'package:card_app/models/subcategory_model.dart';
 import 'package:card_app/provider/auth_provider.dart';
 import 'package:card_app/screens/buy_screen/buy_screen.dart';
+import 'package:card_app/utils/utils.dart';
 import 'package:card_app/widgets/common_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +38,9 @@ class _SelectSubCategoryScreenState extends State<SelectSubCategoryScreen> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(),
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.orange),
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -92,15 +96,35 @@ class _SelectSubCategoryScreenState extends State<SelectSubCategoryScreen> {
                           crossAxisSpacing: 10,
                           mainAxisSpacing: 10),
                       itemBuilder: (_, index) => InkWell(
-                          onTap: () {
-                            Provider.of<AuthProvider>(context, listen: false)
-                                .setSelectedSubCategory(
-                                    data.docs[index].data());
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        BuyScreen()));
+                          onTap: () async {
+                            try {
+                              QuerySnapshot<PricesModel> prices =
+                                  await DatabaseHelper.shared.fetchPrices(
+                                      widget.categoryModel.vendorId,
+                                      data.docs[index].data().catId,
+                                      data.docs[index].data().subCatId,
+                                      Provider.of<AuthProvider>(context,
+                                              listen: false)
+                                          .currentLoggedInUser
+                                          .custId);
+                              SubCategoryModel _subCategoryModel =
+                                  data.docs[index].data();
+                              if (prices.docs.isNotEmpty) {
+                                _subCategoryModel.amount =
+                                    prices.docs.first.data().price;
+                                _subCategoryModel.currency =
+                                    prices.docs.first.data().currencyName;
+                              }
+                              Provider.of<AuthProvider>(context, listen: false)
+                                  .setSelectedSubCategory(_subCategoryModel);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          BuyScreen()));
+                            } catch (e) {
+                              showAlert(context, e.toString());
+                            }
                           },
                           child: getBuyImageCard(
                               data.docs[index].data().imageUrl)),

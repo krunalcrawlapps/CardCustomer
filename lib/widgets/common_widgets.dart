@@ -86,25 +86,28 @@ Widget getBuyImageCard(String imgUrl) {
       borderRadius: BorderRadius.circular(5),
     ),
     child: Container(
-        child: Column(children: [
-      Expanded(
-          child: CachedNetworkImage(
-        imageUrl: imgUrl,
-        fit: BoxFit.cover,
-        placeholder: (context, url) =>
-            Center(child: CircularProgressIndicator()),
-        errorWidget: (context, url, error) => Icon(Icons.error),
-      )),
-      Container(
-        color: Colors.orangeAccent.withOpacity(0.8),
-        alignment: Alignment.center,
-        height: 25,
-        child: Text('Buy',
-            style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: Colors.white)),
-      )
-    ])),
+      child: Column(
+        children: [
+          Expanded(
+              child: CachedNetworkImage(
+            imageUrl: imgUrl,
+            fit: BoxFit.cover,
+            placeholder: (context, url) =>
+                Center(child: CircularProgressIndicator()),
+            errorWidget: (context, url, error) => Icon(Icons.error),
+          )),
+          Container(
+            color: Colors.orangeAccent.withOpacity(0.8),
+            alignment: Alignment.center,
+            height: 25,
+            child: Text('Buy',
+                style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white)),
+          )
+        ],
+      ),
+    ),
   );
 }

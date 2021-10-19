@@ -4,6 +4,7 @@ import 'package:card_app/constant/app_constant.dart';
 import 'package:card_app/models/card_model.dart';
 import 'package:card_app/models/customer_model.dart';
 import 'package:card_app/models/order_model.dart';
+import 'package:card_app/models/price_model.dart';
 import 'package:card_app/provider/auth_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,6 +21,7 @@ class FirebaseCollectionConstant {
   static const transactions = 'Transactions';
   static const category = 'Category';
   static const subcategory = 'SubCategory';
+  static const prices = 'Prices';
 }
 
 class DatabaseHelper {
@@ -197,6 +199,26 @@ class DatabaseHelper {
     }
 
     saveUserModel(customer, context);
+  }
+
+  Future<QuerySnapshot<PricesModel>> fetchPrices(
+      String vendorId, String catId, String subCatId, String custId) {
+    print(vendorId);
+    print(catId);
+    print(subCatId);
+    print(custId);
+    return FirebaseFirestore.instance
+        .collection(FirebaseCollectionConstant.prices)
+        .where('vendor_id', isEqualTo: vendorId)
+        .where('category_id', isEqualTo: catId)
+        .where('subCatId', isEqualTo: subCatId)
+        .where('cust_id', isEqualTo: custId)
+        .withConverter<PricesModel>(
+          fromFirestore: (snapshots, _) =>
+              PricesModel.fromJson(snapshots.data()!),
+          toFirestore: (customer, _) => customer.toJson(),
+        )
+        .get();
   }
 
   Future<List<CardModel>> getVendorWiseCards(

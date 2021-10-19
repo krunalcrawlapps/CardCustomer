@@ -118,7 +118,7 @@ class _BuyScreenState extends State<BuyScreen> {
                                     topRight: Radius.circular(5)),
                               ),
                               child: Text(
-                                "${Provider.of<AuthProvider>(context, listen: false).selectedSubCategory.amount}\n USD",
+                                "${Provider.of<AuthProvider>(context, listen: false).selectedSubCategory.amount}\n ${Provider.of<AuthProvider>(context, listen: false).selectedSubCategory.currency.toUpperCase()}",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.white,
@@ -307,7 +307,7 @@ class _BuyScreenState extends State<BuyScreen> {
                         child: Padding(
                           padding: const EdgeInsets.only(right: 5),
                           child: Text(
-                            'Total Amount\n${getTotalAmount().toString() + ' USD'}',
+                            'Total Amount\n${getTotalAmount().toString() + ' ${Provider.of<AuthProvider>(context, listen: false).selectedSubCategory.currency.toUpperCase()}'}',
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.w700),
                             textAlign: TextAlign.end,
@@ -362,45 +362,45 @@ class _BuyScreenState extends State<BuyScreen> {
   }
 
   _doBuyCards() {
-  List<CardModel> arrBuyCards = arrCards.sublist(0, itemQty);
+    List<CardModel> arrBuyCards = arrCards.sublist(0, itemQty);
 
-  double orderAmount = Provider.of<AuthProvider>(context, listen: false)
-          .selectedSubCategory
-          .amount *
-      itemQty;
-  OrderModel orderModel = OrderModel(
-      getRandomId(),
-      DateTimeUtils.getDateTime(DateTime.now().millisecondsSinceEpoch),
-      arrBuyCards.first.adminId,
-      Provider.of<AuthProvider>(context, listen: false)
-          .currentLoggedInUser
-          .custId,
-      Provider.of<AuthProvider>(context, listen: false)
-          .currentLoggedInUser
-          .custName,
-      false,
-      "",
-      "",
-      "",
-      orderAmount,
-      "",
-      "");
+    double orderAmount = Provider.of<AuthProvider>(context, listen: false)
+            .selectedSubCategory
+            .amount *
+        itemQty;
+    OrderModel orderModel = OrderModel(
+        getRandomId(),
+        DateTimeUtils.getDateTime(DateTime.now().millisecondsSinceEpoch),
+        arrBuyCards.first.adminId,
+        Provider.of<AuthProvider>(context, listen: false)
+            .currentLoggedInUser
+            .custId,
+        Provider.of<AuthProvider>(context, listen: false)
+            .currentLoggedInUser
+            .custName,
+        false,
+        "",
+        "",
+        "",
+        orderAmount,
+        "",
+        "");
 
-  orderModel.arrCards = arrBuyCards.map((e) => e.cardId).toList();
+    orderModel.arrCards = arrBuyCards.map((e) => e.cardId).toList();
 
-  DatabaseHelper.shared.addOrderData(orderModel);
-  arrBuyCards.forEach((element) {
-    DatabaseHelper.shared.updateCardStatus(element.cardId);
-  });
+    DatabaseHelper.shared.addOrderData(orderModel);
+    arrBuyCards.forEach((element) {
+      DatabaseHelper.shared.updateCardStatus(element.cardId);
+    });
 
-  DatabaseHelper.shared.updateCustBalance(getRemainingAmount(), context);
+    DatabaseHelper.shared.updateCustBalance(getRemainingAmount(), context);
 
-  showAlert(context, 'Order placed successfully.', onClick: () {
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-        (Route<dynamic> route) => false);
-  });
-}
+    showAlert(context, 'Order placed successfully.', onClick: () {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+          (Route<dynamic> route) => false);
+    });
+  }
 
   double getTotalAmount() {
     double amount = Provider.of<AuthProvider>(context, listen: true)

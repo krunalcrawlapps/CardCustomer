@@ -1,4 +1,4 @@
-package com.example.card_app
+package com.abs.cardcustomer
 
 import io.flutter.embedding.android.FlutterActivity
 

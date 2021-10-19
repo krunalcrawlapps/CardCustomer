@@ -28,6 +28,10 @@
         "source": "/Users/dreamworld/Desktop/WorkSpace/CardCustomer/android/app/src/main/res/mipmap-xhdpi/ic_launcher.png"
     },
     {
+        "merged": "/Users/dreamworld/Desktop/WorkSpace/CardCustomer/build/app/intermediates/res/merged/debug/drawable_bg.png.flat",
+        "source": "/Users/dreamworld/Desktop/WorkSpace/CardCustomer/android/app/src/main/res/drawable/bg.png"
+    },
+    {
         "merged": "/Users/dreamworld/Desktop/WorkSpace/CardCustomer/build/app/intermediates/res/merged/debug/drawable_launch_background.xml.flat",
         "source": "/Users/dreamworld/Desktop/WorkSpace/CardCustomer/android/app/src/main/res/drawable/launch_background.xml"
     }

@@ -1,7 +1,4 @@
 import 'package:card_app/screens/customer/customer_balance_screen.dart';
-import 'package:card_app/screens/direct_charge/direct_charge_orders.dart';
-import 'package:card_app/screens/orders/order_screen.dart';
-import 'package:card_app/screens/profile_screen.dart';
 import 'package:card_app/screens/vendors/drawer_screen.dart';
 import 'package:flutter/material.dart';
 

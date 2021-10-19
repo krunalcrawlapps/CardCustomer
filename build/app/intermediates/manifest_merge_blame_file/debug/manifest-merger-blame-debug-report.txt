@@ -26,12 +26,12 @@
 20        android:debuggable="true"
 21        android:icon="@mipmap/ic_launcher"
 21-->/Users/dreamworld/Desktop/WorkSpace/CardCustomer/android/app/src/main/AndroidManifest.xml:5:9-43
-22        android:label="CardApp"
-22-->/Users/dreamworld/Desktop/WorkSpace/CardCustomer/android/app/src/main/AndroidManifest.xml:4:9-32
+22        android:label="OBK Card-Customer"
+22-->/Users/dreamworld/Desktop/WorkSpace/CardCustomer/android/app/src/main/AndroidManifest.xml:4:9-42
 23        android:testOnly="true" >
 24        <activity
 24-->/Users/dreamworld/Desktop/WorkSpace/CardCustomer/android/app/src/main/AndroidManifest.xml:6:9-34:20
-25            android:name="com.example.card_app.MainActivity"
+25            android:name="com.abs.cardcustomer.MainActivity"
 25-->/Users/dreamworld/Desktop/WorkSpace/CardCustomer/android/app/src/main/AndroidManifest.xml:7:13-41
 26            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
 26-->/Users/dreamworld/Desktop/WorkSpace/CardCustomer/android/app/src/main/AndroidManifest.xml:10:13-163
