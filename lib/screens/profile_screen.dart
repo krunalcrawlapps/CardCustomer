@@ -6,6 +6,7 @@ import 'package:card_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:provider/provider.dart';
+import '../utils/in_app_translation.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -48,7 +49,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('My Profile'),
+          title: Text(AppTranslations.of(context)!.text('My Profile')),
           // actions: [
           //   IconButton(
           //       onPressed: () {
@@ -68,20 +69,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   controller: nameController,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Name',
+                      labelText: AppTranslations.of(context)!.text('Name'),
                       labelStyle: TextStyle(fontSize: 15)),
                   validator: RequiredValidator(
-                      errorText: StringConstant.enter_name_validation),
+                      errorText: AppTranslations.of(context)!
+                          .text(StringConstant.enter_name_validation)),
                 ),
                 SizedBox(height: 20),
                 TextFormField(
                   controller: addressController,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Address',
+                      labelText: AppTranslations.of(context)!.text('Address'),
                       labelStyle: TextStyle(fontSize: 15)),
                   validator: RequiredValidator(
-                      errorText: StringConstant.enter_address_validation),
+                      errorText: AppTranslations.of(context)!
+                          .text(StringConstant.enter_address_validation)),
                 ),
                 SizedBox(height: 20),
                 TextFormField(
@@ -89,13 +92,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   controller: emailController,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: StringConstant.email_address,
+                      labelText: AppTranslations.of(context)!
+                          .text(StringConstant.email_address),
                       labelStyle: TextStyle(fontSize: 15)),
                   validator: MultiValidator([
                     RequiredValidator(
-                        errorText: StringConstant.enter_email_validation),
+                        errorText: AppTranslations.of(context)!
+                            .text(StringConstant.enter_email_validation)),
                     EmailValidator(
-                        errorText: StringConstant.enter_valid_email_validation)
+                        errorText: AppTranslations.of(context)!
+                            .text(StringConstant.enter_valid_email_validation))
                   ]),
                 ),
                 SizedBox(height: 20),
@@ -108,10 +114,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Balance',
+                      labelText: AppTranslations.of(context)!.text('Balance'),
                       labelStyle: TextStyle(fontSize: 15)),
                   validator: RequiredValidator(
-                      errorText: 'StringConstant.enter_balance_validation'),
+                      errorText: AppTranslations.of(context)!
+                          .text('StringConstant.enter_balance_validation')),
                 ),
                 SizedBox(height: 20),
                 TextFormField(
@@ -119,7 +126,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   controller: passwordController,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: StringConstant.password,
+                      labelText: AppTranslations.of(context)!
+                          .text(StringConstant.password),
                       labelStyle: TextStyle(fontSize: 15),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -134,9 +142,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       )),
                   validator: MultiValidator([
                     RequiredValidator(
-                        errorText: StringConstant.enter_pwd_validation),
+                        errorText: AppTranslations.of(context)!
+                            .text(StringConstant.enter_pwd_validation)),
                     MinLengthValidator(6,
-                        errorText: StringConstant.enter_valid_pwd_validation)
+                        errorText: AppTranslations.of(context)!
+                            .text(StringConstant.enter_valid_pwd_validation))
                   ]),
                 ),
                 SizedBox(height: 20),
@@ -145,7 +155,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   controller: confirmPasswordController,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Confirm Password',
+                      labelText:
+                          AppTranslations.of(context)!.text('Confirm Password'),
                       labelStyle: TextStyle(fontSize: 15),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -162,8 +173,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         },
                       )),
                   validator: (val) => MatchValidator(
-                          errorText:
-                              StringConstant.invalid_confirm_pwd_validation)
+                          errorText: AppTranslations.of(context)!.text(
+                              StringConstant.invalid_confirm_pwd_validation))
                       .validateMatch(passwordController.text, val ?? ''),
                 ),
                 SizedBox(height: 50),
@@ -181,7 +192,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               _editCustomer();
                             }
                           },
-                          child: Text('Save', style: TextStyle(fontSize: 18)),
+                          child: Text(AppTranslations.of(context)!.text('Save'),
+                              style: TextStyle(fontSize: 18)),
                         ),
                       )
               ]),

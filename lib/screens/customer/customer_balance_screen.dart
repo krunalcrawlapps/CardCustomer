@@ -4,6 +4,7 @@ import 'package:card_app/models/vendor_model.dart';
 import 'package:card_app/provider/auth_provider.dart';
 import 'package:card_app/screens/category/select_category_screen.dart';
 import 'package:card_app/screens/vendors/vendor_list_screen.dart';
+import 'package:card_app/utils/in_app_translation.dart';
 import 'package:card_app/utils/utils.dart';
 import 'package:card_app/widgets/common_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -50,7 +51,7 @@ class _CustomerBalanceScreenState extends State<CustomerBalanceScreen> {
             Padding(
               padding: const EdgeInsets.only(left: 5),
               child: Text(
-                'Welcome to, \n${Provider.of<AuthProvider>(context, listen: true).currentLoggedInUser.custName}',
+                '${AppTranslations.of(context)!.text('Welcome to')}, \n${Provider.of<AuthProvider>(context, listen: true).currentLoggedInUser.custName}',
                 style: TextStyle(fontSize: 26, fontWeight: FontWeight.w700),
               ),
             ),
@@ -60,7 +61,7 @@ class _CustomerBalanceScreenState extends State<CustomerBalanceScreen> {
               padding: const EdgeInsets.only(left: 5),
               child: Row(
                 children: [
-                  Text('Current Balance:',
+                  Text(AppTranslations.of(context)!.text('Current Balance:'),
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -71,7 +72,7 @@ class _CustomerBalanceScreenState extends State<CustomerBalanceScreen> {
                               .currentLoggedInUser
                               .custBalance
                               .toStringAsFixed(2) +
-                          ' USD',
+                          ' ${AppTranslations.of(context)!.text('USD')}',
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -127,8 +128,8 @@ class _CustomerBalanceScreenState extends State<CustomerBalanceScreen> {
   Widget getFixCard() {
     return Row(children: [
       Expanded(
-        child: getCardForImageName(
-            ImageConstant.prepaidCard_img, 'Prepaid Cards', () {
+        child: getCardForImageName(ImageConstant.prepaidCard_img,
+            AppTranslations.of(context)!.text('Prepaid Cards'), () {
           setState(() {
             isSelectedPrepaidCard = true;
           });
@@ -140,8 +141,8 @@ class _CustomerBalanceScreenState extends State<CustomerBalanceScreen> {
       ),
       SizedBox(width: 5),
       Expanded(
-        child: getCardForImageName(
-            ImageConstant.direcCharge_img, 'Direct Charge', () {
+        child: getCardForImageName(ImageConstant.direcCharge_img,
+            AppTranslations.of(context)!.text('Direct Charge'), () {
           setState(() {
             isSelectedPrepaidCard = false;
           });
@@ -174,7 +175,8 @@ class _CustomerBalanceScreenState extends State<CustomerBalanceScreen> {
 
         if (data.size == 0) {
           return Center(
-            child: Text(StringConstant.no_data_found),
+            child: Text(AppTranslations.of(context)!
+                .text(StringConstant.no_data_found)),
           );
         }
 

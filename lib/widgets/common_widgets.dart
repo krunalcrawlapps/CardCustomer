@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:card_app/utils/in_app_translation.dart';
 import 'package:flutter/material.dart';
 
 Widget getCardForImageName(
@@ -77,7 +78,7 @@ Widget getImageCard(String imgUrl) {
   );
 }
 
-Widget getBuyImageCard(String imgUrl) {
+Widget getBuyImageCard(String imgUrl,BuildContext context) {
   return Card(
     semanticContainer: true,
     clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -100,7 +101,7 @@ Widget getBuyImageCard(String imgUrl) {
             color: Colors.orangeAccent.withOpacity(0.8),
             alignment: Alignment.center,
             height: 25,
-            child: Text('Buy',
+            child: Text(AppTranslations.of(context)!.text('Buy'),
                 style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,

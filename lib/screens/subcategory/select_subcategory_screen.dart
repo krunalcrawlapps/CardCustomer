@@ -5,6 +5,7 @@ import 'package:card_app/models/price_model.dart';
 import 'package:card_app/models/subcategory_model.dart';
 import 'package:card_app/provider/auth_provider.dart';
 import 'package:card_app/screens/buy_screen/buy_screen.dart';
+import 'package:card_app/utils/in_app_translation.dart';
 import 'package:card_app/utils/utils.dart';
 import 'package:card_app/widgets/common_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -45,9 +46,9 @@ class _SelectSubCategoryScreenState extends State<SelectSubCategoryScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 15),
+            padding: const EdgeInsets.only(left: 15,right: 15),
             child: Text(
-              "Select Sub Category",
+              AppTranslations.of(context)!.text("Select Sub Category"),
               style: Theme.of(context).textTheme.headline4!.copyWith(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
@@ -55,9 +56,10 @@ class _SelectSubCategoryScreenState extends State<SelectSubCategoryScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 15, top: 5, bottom: 10),
+            padding: const EdgeInsets.only(left: 15, top: 5, bottom: 10,right: 15),
             child: Text(
-              "Select sub category of you want to buy",
+              AppTranslations.of(context)!
+                  .text("Select sub category of you want to buy"),
               style: Theme.of(context).textTheme.headline3!.copyWith(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
@@ -82,7 +84,8 @@ class _SelectSubCategoryScreenState extends State<SelectSubCategoryScreen> {
 
                 if (data.size == 0) {
                   return Center(
-                    child: Text(StringConstant.no_data_found),
+                    child: Text(AppTranslations.of(context)!
+                        .text(StringConstant.no_data_found)),
                   );
                 }
 
@@ -127,7 +130,7 @@ class _SelectSubCategoryScreenState extends State<SelectSubCategoryScreen> {
                             }
                           },
                           child: getBuyImageCard(
-                              data.docs[index].data().imageUrl)),
+                              data.docs[index].data().imageUrl,context)),
                       itemCount: data.size,
                     ),
                   ),

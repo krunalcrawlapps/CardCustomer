@@ -1,11 +1,14 @@
 import 'package:card_app/models/customer_model.dart';
 import 'package:card_app/provider/auth_provider.dart';
+import 'package:card_app/provider/language_provider.dart';
 import 'package:card_app/screens/direct_charge/direct_charge_orders.dart';
 import 'package:card_app/screens/orders/order_screen.dart';
+import 'package:card_app/utils/in_app_translation.dart';
 import 'package:card_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../main.dart';
 import '../profile_screen.dart';
 
 class DrawerScreen extends StatefulWidget {
@@ -53,7 +56,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
             Icons.home,
             color: Colors.orange,
           ),
-          title: Text("Home"),
+          title: Text(AppTranslations.of(context)!.text("Home")),
           trailing: Icon(Icons.chevron_right),
         ),
         Divider(),
@@ -70,7 +73,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
             Icons.shopping_cart,
             color: Colors.orange,
           ),
-          title: Text("Orders"),
+          title: Text(AppTranslations.of(context)!.text("Orders")),
           trailing: Icon(Icons.chevron_right),
         ),
         Divider(),
@@ -87,7 +90,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
             Icons.add_shopping_cart,
             color: Colors.orange,
           ),
-          title: Text("Direct Charge"),
+          title: Text(AppTranslations.of(context)!.text("Direct Charge")),
           trailing: Icon(Icons.chevron_right),
         ),
         Divider(),
@@ -104,7 +107,20 @@ class _DrawerScreenState extends State<DrawerScreen> {
             Icons.face_sharp,
             color: Colors.orange,
           ),
-          title: Text("My Profile"),
+          title: Text(AppTranslations.of(context)!.text("My Profile")),
+          trailing: Icon(Icons.chevron_right),
+        ),
+        Divider(),
+        // Change Language...
+        ListTile(
+          onTap: () {
+            buildLanguageDialog(context);
+          },
+          leading: Icon(
+            Icons.language,
+            color: Colors.orange,
+          ),
+          title: Text(AppTranslations.of(context)!.text("Choose Your Language")),
           trailing: Icon(Icons.chevron_right),
         ),
         Divider(),
@@ -117,11 +133,55 @@ class _DrawerScreenState extends State<DrawerScreen> {
             Icons.logout,
             color: Colors.orange,
           ),
-          title: Text("Logout"),
+          title: Text(AppTranslations.of(context)!.text("Logout")),
           trailing: Icon(Icons.chevron_right),
         ),
         Divider(),
       ],
     );
+  }
+
+  buildLanguageDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (builder) {
+          return AlertDialog(
+            title: Text( AppTranslations.of(context)!
+                            .text('Choose Your Language')),
+            content: Container(
+              width: double.maxFinite,
+              child: ListView.separated(
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        child: Text( AppTranslations.of(context)!
+                            .text(locale[index]['name'])),
+                        onTap: () {
+                          print(locale[index]['name']);
+                          updateLanguage(locale[index]['locale'], context);
+                        },
+                      ),
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return Divider();
+                  },
+                  itemCount: locale.length),
+            ),
+          );
+        });
+  }
+
+  final List locale = [
+    {'name': 'English', 'locale': SuppotedLanguage.english},
+    {'name': 'Arabic', 'locale': SuppotedLanguage.arabic},
+  ];
+
+  updateLanguage(String locale, BuildContext context) {
+    Navigator.of(context).pop();
+    Provider.of<LanguageProvider>(context, listen: false).locale =
+        locale;
   }
 }

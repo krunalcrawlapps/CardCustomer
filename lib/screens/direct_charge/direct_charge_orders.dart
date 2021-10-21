@@ -2,10 +2,12 @@ import 'package:card_app/constant/app_constant.dart';
 import 'package:card_app/database/database_helper.dart';
 import 'package:card_app/models/order_model.dart';
 import 'package:card_app/provider/auth_provider.dart';
+import 'package:card_app/utils/in_app_translation.dart';
 import 'package:card_app/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class DirectChargeOrders extends StatefulWidget {
   const DirectChargeOrders({Key? key}) : super(key: key);
@@ -40,9 +42,9 @@ class _DirectChargeOrdersState extends State<DirectChargeOrders> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 15),
+            padding: const EdgeInsets.only(left: 15,right: 15),
             child: Text(
-              "Direct Charge Orders",
+              AppTranslations.of(context)!.text("Direct Charge Orders"),
               style: Theme.of(context).textTheme.headline4!.copyWith(
                   color: Colors.black,
                   fontWeight: FontWeight.w600,
@@ -73,7 +75,8 @@ class _DirectChargeOrdersState extends State<DirectChargeOrders> {
 
                 if (data.size == 0) {
                   return Center(
-                    child: Text(StringConstant.no_data_found),
+                    child: Text(AppTranslations.of(context)!
+                        .text(StringConstant.no_data_found)),
                   );
                 }
 
@@ -111,7 +114,9 @@ class _DirectChargeOrdersState extends State<DirectChargeOrders> {
                                           children: [
                                             Column(
                                               children: [
-                                                Text('Order By',
+                                                Text(
+                                                    AppTranslations.of(context)!
+                                                        .text('Order By'),
                                                     style: TextStyle(
                                                         fontSize: 14)),
                                                 const SizedBox(height: 5),
@@ -126,9 +131,16 @@ class _DirectChargeOrdersState extends State<DirectChargeOrders> {
                                               ],
                                             ),
                                             Text(
-                                                data.docs[index]
-                                                    .data()
-                                                    .transactionDateTime,
+                                                DateFormat(
+                                                        'dd/MM/yyyy, hh:mm a',
+                                                        Localizations.localeOf(
+                                                                context)
+                                                            .languageCode)
+                                                    .format(DateFormat(
+                                                            'dd/MM/yyyy, hh:mm a')
+                                                        .parse(data.docs[index]
+                                                            .data()
+                                                            .transactionDateTime)),
                                                 style: TextStyle(fontSize: 14))
                                           ],
                                         ),
@@ -141,7 +153,9 @@ class _DirectChargeOrdersState extends State<DirectChargeOrders> {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                Text('Amount',
+                                                Text(
+                                                    AppTranslations.of(context)!
+                                                        .text('Amount'),
                                                     style: TextStyle(
                                                         fontSize: 14)),
                                                 SizedBox(height: 5),
@@ -150,7 +164,7 @@ class _DirectChargeOrdersState extends State<DirectChargeOrders> {
                                                             .data()
                                                             .amount
                                                             .toString() +
-                                                        " USD",
+                                                        " ${AppTranslations.of(context)!.text('USD')}",
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         fontWeight:
@@ -161,7 +175,10 @@ class _DirectChargeOrdersState extends State<DirectChargeOrders> {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                Text('Fulfillment Status',
+                                                Text(
+                                                    AppTranslations.of(context)!
+                                                        .text(
+                                                            'Fulfillment Status'),
                                                     style: TextStyle(
                                                         fontSize: 14)),
                                                 SizedBox(height: 5),

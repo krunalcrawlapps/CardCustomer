@@ -3,6 +3,7 @@ import 'package:card_app/database/database_helper.dart';
 import 'package:card_app/models/vendor_model.dart';
 import 'package:card_app/provider/auth_provider.dart';
 import 'package:card_app/screens/category/select_category_screen.dart';
+import 'package:card_app/utils/in_app_translation.dart';
 import 'package:card_app/widgets/common_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,7 @@ class _VendorListScreenState extends State<VendorListScreen> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(title: Text('Vendors')),
+      appBar: AppBar(title: Text(AppTranslations.of(context)!.text('Vendors'))),
       body: StreamBuilder<QuerySnapshot<VendorModel>>(
         stream: vendorRef
             .where('isDirectCharge', isEqualTo: widget.isDirectCharge)
@@ -51,7 +52,8 @@ class _VendorListScreenState extends State<VendorListScreen> {
 
           if (data.size == 0) {
             return Center(
-              child: Text(StringConstant.no_data_found),
+              child: Text(AppTranslations.of(context)!
+                  .text(StringConstant.no_data_found)),
             );
           }
 

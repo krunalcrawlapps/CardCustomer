@@ -23,7 +23,7 @@ class CustomerModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['cust_id'] = this.custId;
     data['cust_name'] = this.custName;
     data['cust_balance'] = this.custBalance;

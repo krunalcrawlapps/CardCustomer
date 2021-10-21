@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:card_app/database/database_helper.dart';
 import 'package:card_app/models/card_model.dart';
 import 'package:card_app/models/order_model.dart';
+import 'package:card_app/utils/in_app_translation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class OrderDetailsScreen extends StatefulWidget {
   final OrderModel orderModel;
@@ -34,7 +38,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Order Details",
+                  AppTranslations.of(context)!.text("Order Details"),
                   style: Theme.of(context).textTheme.headline4!.copyWith(
                       color: Colors.black,
                       fontWeight: FontWeight.w600,
@@ -61,7 +65,9 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                             children: [
                               Column(
                                 children: [
-                                  Text('Order By',
+                                  Text(
+                                      AppTranslations.of(context)!
+                                          .text('Order By'),
                                       style: TextStyle(fontSize: 14)),
                                   const SizedBox(height: 5),
                                   Text(widget.orderModel.custName,
@@ -70,18 +76,31 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                           fontWeight: FontWeight.w600))
                                 ],
                               ),
-                              Text(widget.orderModel.transactionDateTime,
+                              Text(
+                                  DateFormat(
+                                          'dd/MM/yyyy, hh:mm a',
+                                          Localizations.localeOf(context)
+                                              .languageCode)
+                                      .format(DateFormat('dd/MM/yyyy, hh:mm a')
+                                          .parse(widget
+                                              .orderModel.transactionDateTime)),
                                   style: TextStyle(fontSize: 14))
                             ],
                           ),
                           const SizedBox(height: 15),
-                          Text('Amount', style: TextStyle(fontSize: 14)),
+                          Text(AppTranslations.of(context)!.text('Amount'),
+                              style: TextStyle(fontSize: 14)),
                           SizedBox(height: 5),
-                          Text(widget.orderModel.amount.toString() + " USD",
+                          Text(
+                              widget.orderModel.amount.toString() +
+                                  " ${AppTranslations.of(context)!.text('USD')}",
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.w600)),
                           const SizedBox(height: 15),
-                          Text('Ordered Cards', style: TextStyle(fontSize: 14)),
+                          Text(
+                              AppTranslations.of(context)!
+                                  .text('Ordered Cards'),
+                              style: TextStyle(fontSize: 14)),
                           getCardList()
                         ],
                       ),
@@ -118,7 +137,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           return Container(
             padding: EdgeInsets.all(20),
             child: Center(
-              child: Text('No Cards Found!'),
+              child: Text(AppTranslations.of(context)!.text('No Cards Found!')),
             ),
           );
         }
@@ -137,6 +156,15 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   }
 
   Widget getCard(CardModel card) {
+       String cardNumber = "";
+    if (card.cardNumber is int) {
+      cardNumber = card.cardNumber.toString();
+    } else {
+      Latin1Decoder latin1Decoder = Latin1Decoder();
+
+      cardNumber = latin1Decoder.convert(base64Decode(card.cardNumber));
+    }
+
     return Container(
       width: double.infinity,
       child: Card(
@@ -163,7 +191,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       style:
                           TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
                   SizedBox(height: 5),
-                  Text(card.cardNumber.toString(),
+                  Text(cardNumber,
                       style:
                           TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
                   SizedBox(height: 5),

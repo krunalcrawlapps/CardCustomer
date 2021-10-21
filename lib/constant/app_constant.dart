@@ -47,4 +47,5 @@ class ImageConstant {
 
 class SharedPrefConstant {
   static const user_data = 'userData';
+  static const language = 'language';
 }

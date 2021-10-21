@@ -71,6 +71,15 @@ class DatabaseHelper {
     Provider.of<AuthProvider>(context, listen: false).updateLoggedInUserData();
   }
 
+  /// Current language
+  saveLanguage(String language) async {
+    pref.setString(SharedPrefConstant.language, language);
+  }
+
+  String? get getLangauge {
+    return pref.getString(SharedPrefConstant.language);
+  }
+
   Future<CustomerModel?> getUserDataFromFirebase(String userId) async {
     DocumentSnapshot<Map<String, dynamic>> result = await _fireStore
         .collection(FirebaseCollectionConstant.customer)
@@ -203,10 +212,6 @@ class DatabaseHelper {
 
   Future<QuerySnapshot<PricesModel>> fetchPrices(
       String vendorId, String catId, String subCatId, String custId) {
-    print(vendorId);
-    print(catId);
-    print(subCatId);
-    print(custId);
     return FirebaseFirestore.instance
         .collection(FirebaseCollectionConstant.prices)
         .where('vendor_id', isEqualTo: vendorId)

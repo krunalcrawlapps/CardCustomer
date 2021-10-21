@@ -1,5 +1,6 @@
 import 'package:card_app/database/database_helper.dart';
 import 'package:card_app/screens/auth_screens/login_screen.dart';
+import 'package:card_app/utils/in_app_translation.dart';
 import 'package:card_app/widgets/loader_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
@@ -27,11 +28,11 @@ showAlert(BuildContext context, String msg, {Function? onClick}) {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Alert"),
-          content: Text(msg),
+          title: Text(AppTranslations.of(context)!.text("Alert")),
+          content: Text(AppTranslations.of(context)!.text(msg)),
           actions: [
             ElevatedButton(
-              child: const Text("Ok"),
+              child: Text(AppTranslations.of(context)!.text("Ok")),
               onPressed: () {
                 Navigator.of(context).pop();
 
@@ -50,8 +51,9 @@ showLogoutDialog(BuildContext context) async {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text("Confirm"),
-        content: const Text("Are you sure you want to logout?"),
+        title: Text(AppTranslations.of(context)!.text("Confirm")),
+        content: Text(AppTranslations.of(context)!
+            .text("Are you sure you want to logout?")),
         actions: <Widget>[
           ElevatedButton(
               onPressed: () {
@@ -60,10 +62,10 @@ showLogoutDialog(BuildContext context) async {
                     MaterialPageRoute(builder: (context) => LoginScreen()),
                     (Route<dynamic> route) => false);
               },
-              child: const Text("YES")),
+              child: Text(AppTranslations.of(context)!.text("YES"))),
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text("NO"),
+            child: Text(AppTranslations.of(context)!.text("NO")),
           ),
         ],
       );
@@ -77,18 +79,19 @@ Future<bool> deleteConfirmDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text("Confirm"),
-        content: const Text("Are you sure you want to delete?"),
+        title: Text(AppTranslations.of(context)!.text("Confirm")),
+        content: Text(AppTranslations.of(context)!
+            .text("Are you sure you want to delete?")),
         actions: <Widget>[
           ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop(true);
                 onDelete();
               },
-              child: const Text("DELETE")),
+              child: Text(AppTranslations.of(context)!.text("DELETE"))),
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text("CANCEL"),
+            child: Text(AppTranslations.of(context)!.text("CANCEL")),
           ),
         ],
       );

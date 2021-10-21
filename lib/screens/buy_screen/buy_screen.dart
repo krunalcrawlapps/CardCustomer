@@ -2,8 +2,10 @@ import 'package:card_app/database/database_helper.dart';
 import 'package:card_app/models/card_model.dart';
 import 'package:card_app/models/order_model.dart';
 import 'package:card_app/provider/auth_provider.dart';
+import 'package:card_app/provider/language_provider.dart';
 import 'package:card_app/screens/home_screen.dart';
 import 'package:card_app/utils/date_utils.dart';
+import 'package:card_app/utils/in_app_translation.dart';
 import 'package:card_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -58,7 +60,9 @@ class _BuyScreenState extends State<BuyScreen> {
         child: isCardsLoading
             ? Center(child: CircularProgressIndicator())
             : arrCards.length == 0
-                ? Center(child: Text('No Cards in this Category!'))
+                ? Center(
+                    child: Text(AppTranslations.of(context)!
+                        .text('No Cards in this Category!')))
                 : Padding(
                     padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
                     child: Column(children: [
@@ -78,7 +82,9 @@ class _BuyScreenState extends State<BuyScreen> {
                                 // Current balance...
                                 Row(
                                   children: [
-                                    Text('Current Balance:',
+                                    Text(
+                                        AppTranslations.of(context)!
+                                            .text('Current Balance:'),
                                         style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w600,
@@ -90,7 +96,7 @@ class _BuyScreenState extends State<BuyScreen> {
                                                 .currentLoggedInUser
                                                 .custBalance
                                                 .toStringAsFixed(2) +
-                                            ' USD',
+                                            ' ${AppTranslations.of(context)!.text('USD')}',
                                         style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
@@ -103,202 +109,223 @@ class _BuyScreenState extends State<BuyScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5),
                         ),
-                        child: Stack(
-                          alignment: Alignment.topRight,
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(12),
-                              margin: EdgeInsets.only(right: 3, top: 3),
-                              decoration: BoxDecoration(
-                                color: Color(0xFF935216),
-                                borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(40),
-                                    bottomRight: Radius.circular(40),
-                                    topLeft: Radius.circular(40),
-                                    topRight: Radius.circular(5)),
+                        child: Consumer<LanguageProvider>(
+                          builder: (context, language, child) => Stack(
+                            alignment: language.isArabic
+                                ? Alignment.topLeft
+                                : Alignment.topRight,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(12),
+                                margin: EdgeInsets.only(right: 3, top: 3),
+                                decoration: BoxDecoration(
+                                  color: Color(0xFF935216),
+                                  borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(40),
+                                      bottomRight: Radius.circular(40),
+                                      topLeft: language.isArabic
+                                          ? Radius.circular(5)
+                                          : Radius.circular(40),
+                                      topRight: language.isArabic
+                                          ? Radius.circular(40)
+                                          : Radius.circular(5)),
+                                ),
+                                child: Text(
+                                  "${Provider.of<AuthProvider>(context, listen: false).selectedSubCategory.amount}\n ${AppTranslations.of(context)!.text(Provider.of<AuthProvider>(context, listen: false).selectedSubCategory.currency.toUpperCase())}",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600),
+                                ),
                               ),
-                              child: Text(
-                                "${Provider.of<AuthProvider>(context, listen: false).selectedSubCategory.amount}\n ${Provider.of<AuthProvider>(context, listen: false).selectedSubCategory.currency.toUpperCase()}",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.all(4),
-                              padding: EdgeInsets.all(15),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: Colors.grey.withOpacity(0.1)),
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Vendor',
-                                        style: TextStyle(fontSize: 16)),
-                                    SizedBox(height: 5),
-                                    Text(
-                                        Provider.of<AuthProvider>(context,
-                                                listen: true)
-                                            .selectedVendor
-                                            .vendorName,
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        )),
-                                    SizedBox(height: 20),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text('Category',
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                  )),
-                                              SizedBox(height: 5),
-                                              Text(
-                                                  Provider.of<AuthProvider>(
-                                                          context,
-                                                          listen: true)
-                                                      .selectedCategory
-                                                      .catName,
-                                                  maxLines: 3,
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
-                                                  )),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(width: 15),
-                                        Expanded(
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 20),
+                              Container(
+                                margin: EdgeInsets.all(4),
+                                padding: EdgeInsets.all(15),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Colors.grey.withOpacity(0.1)),
+                                child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                          AppTranslations.of(context)!
+                                              .text('Vendor'),
+                                          style: TextStyle(fontSize: 16)),
+                                      SizedBox(height: 5),
+                                      Text(
+                                          Provider.of<AuthProvider>(context,
+                                                  listen: true)
+                                              .selectedVendor
+                                              .vendorName,
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          )),
+                                      SizedBox(height: 20),
+                                      Row(
+                                        children: [
+                                          Expanded(
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                Text('Sub Category',
+                                                Text(
+                                                    AppTranslations.of(context)!
+                                                        .text('Category'),
                                                     style: TextStyle(
-                                                        fontSize: 16)),
+                                                      fontSize: 16,
+                                                    )),
                                                 SizedBox(height: 5),
                                                 Text(
-                                                  Provider.of<AuthProvider>(
-                                                          context,
-                                                          listen: true)
-                                                      .selectedSubCategory
-                                                      .subCatName,
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                  maxLines: 3,
-                                                ),
+                                                    Provider.of<AuthProvider>(
+                                                            context,
+                                                            listen: true)
+                                                        .selectedCategory
+                                                        .catName,
+                                                    maxLines: 3,
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    )),
                                               ],
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    Container(
-                                      width: double.infinity,
-                                      margin: EdgeInsets.only(top: 25),
-                                      padding: EdgeInsets.only(
-                                          left: 10, top: 5, bottom: 5),
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(5)),
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            'Select Quantity',
+                                          const SizedBox(width: 15),
+                                          Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 20),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                      AppTranslations.of(
+                                                              context)!
+                                                          .text('Sub Category'),
+                                                      style: TextStyle(
+                                                          fontSize: 16)),
+                                                  SizedBox(height: 5),
+                                                  Text(
+                                                    Provider.of<AuthProvider>(
+                                                            context,
+                                                            listen: true)
+                                                        .selectedSubCategory
+                                                        .subCatName,
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                    maxLines: 3,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
                                           ),
-                                          Spacer(),
-                                          IconButton(
-                                              onPressed: () {
-                                                if (itemQty != 1) {
-                                                  setState(() {
-                                                    itemQty -= 1;
-                                                  });
-                                                }
-                                              },
-                                              icon: Container(
-                                                padding: EdgeInsets.all(3),
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
-                                                    color: Colors.grey
-                                                        .withOpacity(0.15)),
-                                                child: Icon(
-                                                  Icons.remove,
-                                                  size: 20,
-                                                ),
-                                              )),
-                                          SizedBox(width: 10),
-                                          Text('$itemQty',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w700)),
-                                          SizedBox(width: 10),
-                                          IconButton(
-                                              onPressed: () {
-                                                itemQty += 1;
-
-                                                if (itemQty > arrCards.length) {
-                                                  itemQty -= 1;
-                                                  showAlert(context,
-                                                      'Only ${arrCards.length} Cards Available!');
-                                                } else {
-                                                  double amount =
-                                                      Provider.of<AuthProvider>(
-                                                              context,
-                                                              listen: false)
-                                                          .selectedSubCategory
-                                                          .amount;
-                                                  double totalUsedAmount =
-                                                      amount * itemQty;
-                                                  // if (getRemainingAmount() <
-                                                  //     tmpAmount) {
-                                                  if (totalUsedAmount >
-                                                      Provider.of<AuthProvider>(
-                                                              context,
-                                                              listen: false)
-                                                          .currentLoggedInUser
-                                                          .custBalance) {
-                                                    //no enough balance
-                                                    itemQty -= 1;
-                                                    showAlert(context,
-                                                        'You have not sufficient balance');
-                                                  } else {
-                                                    setState(() {});
-                                                  }
-                                                }
-                                              },
-                                              icon: Container(
-                                                padding: EdgeInsets.all(3),
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
-                                                    color: Colors.grey
-                                                        .withOpacity(0.15)),
-                                                child: Icon(
-                                                  Icons.add,
-                                                  size: 20,
-                                                ),
-                                              ))
                                         ],
                                       ),
-                                    )
-                                  ]),
-                            ),
-                          ],
+                                      Container(
+                                        width: double.infinity,
+                                        margin: EdgeInsets.only(top: 25),
+                                        padding: EdgeInsets.only(
+                                            left: 10, top: 5, bottom: 5,right: 10),
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              AppTranslations.of(context)!
+                                                  .text('Select Quantity'),
+                                            ),
+                                            Spacer(),
+                                            IconButton(
+                                                onPressed: () {
+                                                  if (itemQty != 1) {
+                                                    setState(() {
+                                                      itemQty -= 1;
+                                                    });
+                                                  }
+                                                },
+                                                icon: Container(
+                                                  padding: EdgeInsets.all(3),
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                      color: Colors.grey
+                                                          .withOpacity(0.15)),
+                                                  child: Icon(
+                                                    Icons.remove,
+                                                    size: 20,
+                                                  ),
+                                                )),
+                                            SizedBox(width: 10),
+                                            Text('$itemQty',
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.w700)),
+                                            SizedBox(width: 10),
+                                            IconButton(
+                                                onPressed: () {
+                                                  itemQty += 1;
+
+                                                  if (itemQty >
+                                                      arrCards.length) {
+                                                    itemQty -= 1;
+                                                    showAlert(context,
+                                                        '${AppTranslations.of(context)!.text('Only')} ${arrCards.length} ${AppTranslations.of(context)!.text('Cards Available')}!');
+                                                  } else {
+                                                    double amount = Provider.of<
+                                                                AuthProvider>(
+                                                            context,
+                                                            listen: false)
+                                                        .selectedSubCategory
+                                                        .amount;
+                                                    double totalUsedAmount =
+                                                        amount * itemQty;
+                                                    // if (getRemainingAmount() <
+                                                    //     tmpAmount) {
+                                                    if (totalUsedAmount >
+                                                        Provider.of<AuthProvider>(
+                                                                context,
+                                                                listen: false)
+                                                            .currentLoggedInUser
+                                                            .custBalance) {
+                                                      //no enough balance
+                                                      itemQty -= 1;
+                                                      showAlert(context,
+                                                          'You have not sufficient balance');
+                                                    } else {
+                                                      setState(() {});
+                                                    }
+                                                  }
+                                                },
+                                                icon: Container(
+                                                  padding: EdgeInsets.all(3),
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                      color: Colors.grey
+                                                          .withOpacity(0.15)),
+                                                  child: Icon(
+                                                    Icons.add,
+                                                    size: 20,
+                                                  ),
+                                                ))
+                                          ],
+                                        ),
+                                      )
+                                    ]),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       SizedBox(height: 10),
@@ -307,7 +334,7 @@ class _BuyScreenState extends State<BuyScreen> {
                         child: Padding(
                           padding: const EdgeInsets.only(right: 5),
                           child: Text(
-                            'Total Amount\n${getTotalAmount().toString() + ' ${Provider.of<AuthProvider>(context, listen: false).selectedSubCategory.currency.toUpperCase()}'}',
+                            '${AppTranslations.of(context)!.text('Total Amount')}\n${getTotalAmount().toString() + ' ${AppTranslations.of(context)!.text(Provider.of<AuthProvider>(context, listen: false).selectedSubCategory.currency.toUpperCase())}'}',
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.w700),
                             textAlign: TextAlign.end,
@@ -329,7 +356,7 @@ class _BuyScreenState extends State<BuyScreen> {
                           onPressed: () {
                             if (itemQty > arrCards.length) {
                               showAlert(context,
-                                  'Only ${arrCards.length} Cards Available!');
+                                  '${AppTranslations.of(context)!.text('Only')} ${arrCards.length} ${AppTranslations.of(context)!.text('Cards Available!')}');
                             } else {
                               double amount = Provider.of<AuthProvider>(context,
                                       listen: false)
@@ -349,7 +376,7 @@ class _BuyScreenState extends State<BuyScreen> {
                               }
                             }
                           },
-                          child: const Text('Buy',
+                          child: Text(AppTranslations.of(context)!.text('Buy'),
                               style:
                                   TextStyle(fontSize: 18, color: Colors.white)),
                         ),

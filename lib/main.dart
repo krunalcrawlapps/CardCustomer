@@ -1,9 +1,14 @@
 import 'package:card_app/constant/app_constant.dart';
 import 'package:card_app/database/database_helper.dart';
 import 'package:card_app/provider/auth_provider.dart';
+import 'package:card_app/provider/language_provider.dart';
 import 'package:card_app/screens/auth_screens/splash_screen.dart';
+import 'package:card_app/utils/in_app_translation.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+
+import 'package:flutter_localizations/flutter_localizations.dart';
+
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
@@ -21,16 +26,30 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => LanguageProvider()),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: StringConstant.app_name,
-        theme: ThemeData(
-          primarySwatch: Colors.orange,
-          appBarTheme: AppBarTheme(color: Colors.white, elevation: 0),
-          scaffoldBackgroundColor: Colors.white,
+      child: Consumer<LanguageProvider>(
+        builder: (context, languageProvider, child) => MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: StringConstant.app_name,
+          theme: ThemeData(
+            primarySwatch: Colors.orange,
+            appBarTheme: AppBarTheme(color: Colors.white, elevation: 0),
+            scaffoldBackgroundColor: Colors.white,
+          ),
+          locale: Locale(languageProvider.locale),
+          localizationsDelegates: [
+            languageProvider.newLocaleDelegate,
+            // Localization delegate...
+            AppTranslationsDelegate(),
+            // Provides localised strings
+            GlobalMaterialLocalizations.delegate,
+            // Provides RTL support
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          supportedLocales: application.supportedLocales(),
+          home: SplashScreen(),
         ),
-        home: SplashScreen(),
       ),
     );
   }
