@@ -6,6 +6,8 @@ import 'package:card_app/provider/auth_provider.dart';
 import 'package:card_app/provider/language_provider.dart';
 import 'package:card_app/screens/auth_screens/splash_screen.dart';
 import 'package:card_app/utils/in_app_translation.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -21,14 +23,16 @@ Future<void> main() async {
 
     await DatabaseHelper.shared.initDatabase();
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-    runApp(const MyApp());
+    runApp(MyApp());
   }, (error, stackTrace) {
     FirebaseCrashlytics.instance.recordError(error, stackTrace);
   });
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
+
+  final FirebaseAnalytics analytics = FirebaseAnalytics();
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +59,9 @@ class MyApp extends StatelessWidget {
             GlobalMaterialLocalizations.delegate,
             // Provides RTL support
             GlobalWidgetsLocalizations.delegate,
+          ],
+          navigatorObservers: [
+            FirebaseAnalyticsObserver(analytics: analytics),
           ],
           supportedLocales: application.supportedLocales(),
           home: SplashScreen(),
