@@ -24,7 +24,10 @@ class StringConstant {
   static const enter_confirm_pwd_validation = 'Please enter confirm password';
   static const invalid_confirm_pwd_validation =
       'Confirm password should be same as password';
-
+  static const enterPhoneNumber = 'Please enter phone number';
+  static const enter_serial_validation = 'Please enter serial number';
+  static const enter_valid_serial_number_validation =
+      'Serial number should be 11 digit';
   static const enter_amount_validation = 'Please enter amount';
   static const enter_accountId_validation = 'Please enter account id';
 

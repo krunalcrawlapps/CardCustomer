@@ -232,7 +232,10 @@ class _BuyScreenState extends State<BuyScreen> {
                                         width: double.infinity,
                                         margin: EdgeInsets.only(top: 25),
                                         padding: EdgeInsets.only(
-                                            left: 10, top: 5, bottom: 5,right: 10),
+                                            left: 10,
+                                            top: 5,
+                                            bottom: 5,
+                                            right: 10),
                                         decoration: BoxDecoration(
                                             color: Colors.white,
                                             borderRadius:
@@ -405,6 +408,9 @@ class _BuyScreenState extends State<BuyScreen> {
         Provider.of<AuthProvider>(context, listen: false)
             .currentLoggedInUser
             .custName,
+        Provider.of<AuthProvider>(context, listen: false)
+            .currentLoggedInUser
+            .custMobile,
         false,
         "",
         "",

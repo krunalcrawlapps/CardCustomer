@@ -158,7 +158,7 @@ class _DirectChargeScreenState extends State<DirectChargeScreen> {
                                     validator: RequiredValidator(
                                         errorText: AppTranslations.of(context)!
                                             .text(StringConstant
-                                            .enter_accountId_validation)),
+                                                .enter_accountId_validation)),
                                   ),
                                   SizedBox(height: 20),
                                   TextFormField(
@@ -224,6 +224,9 @@ class _DirectChargeScreenState extends State<DirectChargeScreen> {
         Provider.of<AuthProvider>(context, listen: false)
             .currentLoggedInUser
             .custName,
+        Provider.of<AuthProvider>(context, listen: false)
+            .currentLoggedInUser
+            .custMobile,
         true,
         accountController.text,
         secAccountController.text,

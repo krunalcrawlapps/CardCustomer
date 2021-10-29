@@ -19,6 +19,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   //variables
   final _formKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
+  TextEditingController mobileNumberController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController balanceController = TextEditingController();
@@ -31,13 +32,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     CustomerModel customerModel =
         Provider.of<AuthProvider>(context, listen: false).currentLoggedInUser;
 
     nameController.text = customerModel.custName;
+    mobileNumberController.text = customerModel.custMobile ?? "";
     addressController.text = customerModel.custAddress;
     emailController.text = customerModel.custEmail;
     balanceController.text = customerModel.custBalance.toString();
@@ -74,6 +75,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   validator: RequiredValidator(
                       errorText: AppTranslations.of(context)!
                           .text(StringConstant.enter_name_validation)),
+                ),
+                SizedBox(height: 20),
+                TextFormField(
+                  controller: mobileNumberController,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: AppTranslations.of(context)!.text('Phone Number'),
+                      labelStyle: TextStyle(fontSize: 15)),
+                  validator: RequiredValidator(
+                      errorText: AppTranslations.of(context)!
+                          .text(StringConstant.enterPhoneNumber)),
                 ),
                 SizedBox(height: 20),
                 TextFormField(
@@ -213,6 +225,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       customerModel.custName = nameController.text;
       customerModel.custAddress = addressController.text;
       customerModel.custPassword = passwordController.text;
+      customerModel.custMobile = mobileNumberController.text;
 
       await DatabaseHelper.shared
           .updateCustomer(oldPwd, customerModel, context);

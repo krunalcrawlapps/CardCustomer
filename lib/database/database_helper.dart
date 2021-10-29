@@ -120,6 +120,7 @@ class DatabaseHelper {
         'admin_id': order.adminId,
         'cust_id': order.custId,
         'cust_name': order.custName,
+        "mobile_number": order.custMobile,
         'card_ids': order.arrCards,
         'isDirectCharge': order.isDirectCharge,
         'accountId': order.accountId,
@@ -185,6 +186,7 @@ class DatabaseHelper {
               .doc(customer.custId)
               .update({
             'cust_name': customer.custName,
+            "mobile_number": customer.custMobile,
             'cust_address': customer.custAddress,
             'cust_password': customer.custPassword,
           });
@@ -200,6 +202,7 @@ class DatabaseHelper {
             .doc(customer.custId)
             .update({
           'cust_name': customer.custName,
+          "mobile_number": customer.custMobile,
           'cust_address': customer.custAddress,
         });
       } on FirebaseAuthException catch (error) {

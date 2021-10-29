@@ -3,11 +3,10 @@ import 'package:card_app/database/database_helper.dart';
 import 'package:card_app/models/order_model.dart';
 import 'package:card_app/provider/auth_provider.dart';
 import 'package:card_app/utils/in_app_translation.dart';
-import 'package:card_app/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class DirectChargeOrders extends StatefulWidget {
   const DirectChargeOrders({Key? key}) : super(key: key);
@@ -61,7 +60,7 @@ class _DirectChargeOrdersState extends State<DirectChargeOrders> {
                               .custId)
                   .where('isDirectCharge', isEqualTo: true)
                   .snapshots(),
-              builder: (context, snapshot) {
+              builder: (context, snapshot) { 
                 if (snapshot.hasError) {
                   return Center(
                     child: Text(snapshot.error.toString()),
